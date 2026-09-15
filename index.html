@@ -27,7 +27,8 @@
             touch-action: manipulation;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: #050512;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            margin: 0;
+            padding: 0;
         }
 
         #game-container {
@@ -4493,6 +4494,12 @@
         }
 
         function onWindowResize() {
+            setTimeout(() => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }, 100);
+            // Fire immediately as well just in case
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
