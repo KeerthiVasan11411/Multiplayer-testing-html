@@ -759,6 +759,135 @@
                 display: flex;
             }
         }
+
+        /* ── Multiplayer Race Result Modal ── */
+        #mp-result-modal {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+            background: radial-gradient(circle at center, rgba(5,5,20,0.96) 0%, rgba(0,0,8,0.99) 100%);
+            backdrop-filter: blur(20px);
+            animation: mpResultFadeIn 0.5s ease-out;
+        }
+        @keyframes mpResultFadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        #mp-result-modal .mpr-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            padding: 32px 44px;
+            border-radius: 20px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+        }
+        #mp-result-modal .mpr-box.winner {
+            background: rgba(0, 255, 100, 0.05);
+            border: 2px solid rgba(0, 255, 100, 0.5);
+            box-shadow: 0 0 60px rgba(0, 255, 100, 0.2), inset 0 0 40px rgba(0, 255, 100, 0.05);
+        }
+        #mp-result-modal .mpr-box.loser {
+            background: rgba(255, 0, 85, 0.05);
+            border: 2px solid rgba(255, 0, 85, 0.5);
+            box-shadow: 0 0 60px rgba(255, 0, 85, 0.2), inset 0 0 40px rgba(255, 0, 85, 0.05);
+        }
+        #mp-result-modal .mpr-trophy {
+            font-size: 72px;
+            line-height: 1;
+            animation: mprTrophyBounce 0.6s cubic-bezier(.175,.885,.32,1.275);
+        }
+        @keyframes mprTrophyBounce {
+            0%   { transform: scale(0); opacity: 0; }
+            70%  { transform: scale(1.15); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+        #mp-result-modal .mpr-title {
+            font-size: 38px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-family: 'Courier New', monospace;
+        }
+        #mp-result-modal .mpr-box.winner .mpr-title {
+            color: #00ff88;
+            text-shadow: 0 0 30px #00ff88, 0 0 60px rgba(0, 255, 136, 0.4);
+        }
+        #mp-result-modal .mpr-box.loser .mpr-title {
+            color: #ff0055;
+            text-shadow: 0 0 30px #ff0055, 0 0 60px rgba(255, 0, 85, 0.4);
+        }
+        #mp-result-modal .mpr-subtitle {
+            font-size: 12px;
+            letter-spacing: 3px;
+            color: #6a80a0;
+            text-transform: uppercase;
+            margin-top: -10px;
+        }
+        #mp-result-modal .mpr-scores {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            width: 100%;
+        }
+        #mp-result-modal .mpr-score-card {
+            flex: 1;
+            padding: 14px 10px;
+            border-radius: 10px;
+            min-width: 100px;
+        }
+        #mp-result-modal .mpr-score-card.my-score {
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.35);
+        }
+        #mp-result-modal .mpr-score-card.opp-score {
+            background: rgba(255, 0, 85, 0.08);
+            border: 1px solid rgba(255, 0, 85, 0.35);
+        }
+        #mp-result-modal .mpr-score-label {
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .my-score .mpr-score-label { color: #00f0ff; }
+        .opp-score .mpr-score-label { color: #ff0055; }
+        #mp-result-modal .mpr-score-val {
+            font-size: 28px;
+            font-weight: 900;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        #mp-result-modal .mpr-leave-btn {
+            padding: 13px 40px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            background: linear-gradient(135deg, #ff0055 0%, #ff5500 100%);
+            border: none;
+            border-radius: 35px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 25px rgba(255,0,85,0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 4px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #mp-result-modal .mpr-leave-btn:hover,
+        #mp-result-modal .mpr-leave-btn:active {
+            transform: translateY(-2px) scale(1.04);
+            filter: brightness(1.15);
+        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -816,6 +945,26 @@
             <button class="t-btn" id="btnBoostLock" title="Constant Boost Lock">🚀</button>
             <button class="t-btn" id="btnHorn" title="Horn">📢</button>
             <button class="t-btn" id="btnBrake">🛑</button>
+        </div>
+    </div>
+
+    <!-- ── Multiplayer Race Result Modal ── -->
+    <div id="mp-result-modal" class="hidden">
+        <div class="mpr-box winner" id="mpr-box">
+            <div class="mpr-trophy" id="mpr-trophy">🏆</div>
+            <div class="mpr-title" id="mpr-title">YOU WIN!</div>
+            <div class="mpr-subtitle" id="mpr-subtitle">OPPONENT CRASHED</div>
+            <div class="mpr-scores">
+                <div class="mpr-score-card my-score">
+                    <div class="mpr-score-label">YOUR SCORE</div>
+                    <div class="mpr-score-val" id="mpr-my-score">0</div>
+                </div>
+                <div class="mpr-score-card opp-score">
+                    <div class="mpr-score-label">OPP SCORE</div>
+                    <div class="mpr-score-val" id="mpr-opp-score">0</div>
+                </div>
+            </div>
+            <button class="mpr-leave-btn" id="mpr-leave-btn">🚪 LEAVE ROOM</button>
         </div>
     </div>
 
@@ -1421,7 +1570,7 @@
 
             playerBox = new THREE.Box3();
 
-            setWeatherEnvironment(Math.floor(Math.random() * 6));
+            setWeatherEnvironment(Math.floor(Math.random() * 2));
 
             window.addEventListener('resize', onWindowResize);
             setupTouchListeners();
@@ -1513,11 +1662,7 @@
 
             const modes = [
                 { name: "MORNING", bg: 0x87ceeb, fog: 0x87ceeb, amb: 0xffffff, ambInt: 1.2, sun: 0xfffaed, sunInt: 1.2, rain: false, isNight: false },
-                { name: "EVENING", bg: 0xed7d31, fog: 0xd96b27, amb: 0xffaa66, ambInt: 0.9, sun: 0xff4500, sunInt: 1.5, rain: false, isNight: false },
-                { name: "NIGHT", bg: 0x050512, fog: 0x050512, amb: 0x223355, ambInt: 0.8, sun: 0x4080ff, sunInt: 0.5, rain: false, isNight: true },
-                { name: "RAIN (MORNING)", bg: 0x5a6b7c, fog: 0x5a6b7c, amb: 0x99aabb, ambInt: 0.8, sun: 0x8899aa, sunInt: 0.6, rain: true, isNight: false },
-                { name: "RAIN (EVENING)", bg: 0x8a4b38, fog: 0x8a4b38, amb: 0xaa6655, ambInt: 0.6, sun: 0xcc5533, sunInt: 0.7, rain: true, isNight: false },
-                { name: "RAIN (NIGHT)", bg: 0x03030c, fog: 0x03030c, amb: 0x182238, ambInt: 0.6, sun: 0x112244, sunInt: 0.3, rain: true, isNight: true }
+                { name: "NIGHT", bg: 0x050512, fog: 0x050512, amb: 0x223355, ambInt: 0.8, sun: 0x4080ff, sunInt: 0.5, rain: false, isNight: true }
             ];
 
             const current = modes[weatherMode % modes.length];
@@ -4004,7 +4149,7 @@
             isSuperBoostActive = false;
             hornTrafficFreezeTimer = 0;
 
-            setWeatherEnvironment(Math.floor(Math.random() * 6));
+            setWeatherEnvironment(Math.floor(Math.random() * 2));
 
             currentSpeed = baseSpeed;
             isGameRunning = true;
@@ -4066,6 +4211,25 @@
             stopRainSound();
             playCrashSound();
             if (exhaustFlamesGroup) exhaustFlamesGroup.visible = false;
+
+            // ── Multiplayer: notify opponent + show result card ──
+            if (window.isMultiplayerMode) {
+                const myFinalScore = Math.floor(score);
+                // Tell the opponent we crashed (they will get the win)
+                if (window.conn && window.conn.open) {
+                    try {
+                        window.conn.send({
+                            type:  'opponent_crashed',
+                            score: myFinalScore
+                        });
+                    } catch(e) {}
+                }
+                // Show loser screen on this device
+                setTimeout(() => {
+                    window.showMpResult('loser', myFinalScore, window.oppNetScore || 0);
+                }, 300);
+                return;  // skip single-player crash screen
+            }
 
             setTimeout(() => {
                 startLobbyMusic();
@@ -4184,10 +4348,7 @@
 
             if (weatherTimer > 30) {
                 weatherTimer = 0;
-                let nextMode;
-                do {
-                    nextMode = Math.floor(Math.random() * 6);
-                } while (nextMode === weatherMode);
+                const nextMode = (weatherMode + 1) % 2;
                 setWeatherEnvironment(nextMode);
             }
 
@@ -4485,12 +4646,23 @@
                 camera.position.z = 8.5;
             }
             camera.updateProjectionMatrix();
+
+            // Direct call to opponent vehicle sync every frame
+            if (typeof isMultiplayerMode !== 'undefined' && isMultiplayerMode && opponentCar && !isPaused) {
+                updateOpponentCar(moveDist);
+            }
         }
 
         function gameLoop() {
             animFrameId = requestAnimationFrame(gameLoop);
             if (isGameRunning && !isPaused) {
                 update();
+                renderer.render(scene, camera);
+            } else if (isGameRunning && isPaused) {
+                // Keep rendering during countdown or pause so side-by-side cars and world are visible!
+                if (typeof isMultiplayerMode !== 'undefined' && isMultiplayerMode && opponentCar) {
+                    updateOpponentCar(0);
+                }
                 renderer.render(scene, camera);
             } else if (!isGameRunning && playerCar) {
                 playerCar.rotation.y += 0.015;
@@ -4543,6 +4715,12 @@
 
         // moveDist captured from within the original update() each frame
         let _lastMoveDist = 0;
+
+        // Expose key state to window so single-player gameOver() can read them
+        Object.defineProperty(window, 'isMultiplayerMode', { get: () => isMultiplayerMode, configurable: true });
+        Object.defineProperty(window, 'conn',              { get: () => conn,              configurable: true });
+        Object.defineProperty(window, 'oppNetScore',       { get: () => oppNetScore,       configurable: true });
+
 
         // ────────── DOM ────────────────────────────────────────────────────────
         const mpRoomModal     = document.getElementById('mp-room-modal');
@@ -4729,6 +4907,23 @@
                 else if (data.type === 'disconnect') {
                     handleOpponentDisconnect();
                 }
+
+                // ── Opponent crashed → we win! ──
+                else if (data.type === 'opponent_crashed') {
+                    if (!isMultiplayerMode || !opponentAlive) return;
+                    opponentAlive = false;
+                    // Update final opponent score before showing result
+                    if (data.score !== undefined) {
+                        oppNetScore = data.score;
+                        if (oppScoreEl) oppScoreEl.textContent = oppNetScore;
+                    }
+                    // Stop our game then show winner screen
+                    isGameRunning = false;
+                    clearPressedKeys();
+                    stopEngineSound();
+                    stopRainSound();
+                    window.showMpResult('winner', Math.floor(score), oppNetScore);
+                }
             });
 
             connection.on('close', () => { handleOpponentDisconnect(); });
@@ -4739,8 +4934,8 @@
         function beginCountdown() {
             // Host initiates env_init + countdown_go to client
             if (myPlayerSlot === 'host') {
-                // Pick a shared random weather seed
-                const sharedWeather = Math.floor(Math.random() * 6);
+                // Pick a shared random weather seed (Morning or Night)
+                const sharedWeather = Math.floor(Math.random() * 2);
                 setWeatherEnvironment(sharedWeather);
                 trafficLightState = 'GREEN';
                 trafficLightTimer = 0;
@@ -4760,7 +4955,11 @@
             runCountdown();
         }
 
+        let isCountdownRunning = false;
         function runCountdown() {
+            if (isCountdownRunning) return;
+            isCountdownRunning = true;
+
             // Launch game engine (spawns cars, road, etc.) but freeze controls
             startMultiplayerGame();
 
@@ -4820,13 +5019,17 @@
                         n.style.animation = 'mpCountFade 0.4s ease-out forwards';
                         setTimeout(() => {
                             if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-                            isPaused = false;   // ← controls unlocked here only
+                            isCountdownRunning = false;
+                            currentSpeed = baseSpeed;
+                            isPaused = false;   // ← controls and speed unlocked here
                         }, 400);
                     }, 600);
                 }
             }
 
             isPaused = true;   // freeze controls during countdown
+            currentSpeed = 0;  // cars are stationary before race starts
+            if (speedDisplay) speedDisplay.innerText = "0";
             showNum();
         }
 
@@ -4841,6 +5044,7 @@
 
         function abortRoomConnection() {
             fallbackTriggered = false;
+            isCountdownRunning = false;
             if (conn) { try { conn.close();   } catch(e){} conn = null; }
             if (peer) { try { peer.destroy(); } catch(e){} peer = null; }
             if (syncInterval)    { clearInterval(syncInterval);    syncInterval    = null; }
@@ -4850,10 +5054,6 @@
         }
 
         // ────────── START MULTIPLAYER SESSION ──────────────────────────────────
-        // This calls the ORIGINAL startGame() which:
-        //   - spawns playerCar (controlled only by local keyboard)
-        //   - starts road/traffic/weather systems
-        // Then we add the opponent ghost car beside the player car.
         function startMultiplayerGame() {
             isMultiplayerMode = true;
             mpRoomModal.classList.add('hidden');
@@ -4861,18 +5061,21 @@
             mpStatusBadge.classList.remove('hidden');
 
             // Start normal single-player engine
-            // (keyboard → pressedKeys → update() → playerCar.position.x — all local)
             startGame();
 
-            // Place player in RIGHT lane (x = +2.5), opponent ghost in LEFT (x = -2.5)
+            // Keep cars stationary during countdown
+            currentSpeed = 0;
+            if (speedDisplay) speedDisplay.innerText = "0";
+
+            // Player 1 (Host) on RIGHT side (+2.5), Player 2 (Client) on LEFT side (-2.5) of center white dotted line
             if (playerCar) {
-                // Host starts on Left (-2.5), Client starts on Right (+2.5)
-                const startX = (myPlayerSlot === 'host') ? -2.5 : 2.5;
+                const startX = (myPlayerSlot === 'host') ? 2.5 : -2.5;
                 playerCar.position.set(startX, 0, 0);
                 playerCar.rotation.set(0, 0, 0);
+                camera.position.x = startX * 0.3;
             }
 
-            // Spawn the blue ghost car
+            // Spawn the opponent ghost car on the opposite lane
             spawnOpponentCar();
 
             // Begin position sync (~20 Hz)
@@ -4885,10 +5088,6 @@
         }
 
         // ────────── GHOST OPPONENT CAR ─────────────────────────────────────────
-        // This car:
-        //   • Is NOT in trafficCars[] → no AI interaction
-        //   • Has no collision box checked against playerBox
-        //   • Only moves via network data (oppNetX) + world scroll
         function spawnOpponentCar() {
             if (opponentCar) { scene.remove(opponentCar); opponentCar = null; }
 
@@ -4900,8 +5099,9 @@
             glow.position.set(0, -0.15, 0);
             opponentCar.add(glow);
 
-            // Opponent is the opposite of local player
-            const oppStartX = (myPlayerSlot === 'host') ? 2.5 : -2.5;
+            // Opponent sits on the opposite side of the center line:
+            // Host sees Client on LEFT (-2.5), Client sees Host on RIGHT (+2.5)
+            const oppStartX = (myPlayerSlot === 'host') ? -2.5 : 2.5;
             opponentCar.position.set(oppStartX, 0, 0);
             oppNetX  = oppStartX;
             oppPrevX = oppStartX;
@@ -5037,26 +5237,55 @@
         function handleOpponentDisconnect() {
             if (!isMultiplayerMode || !opponentAlive) return;
             opponentAlive = false;
-
-            const badge = document.createElement('div');
-            badge.style.cssText = `
-                position:absolute; top:50%; left:50%;
-                transform:translate(-50%,-50%);
-                background:rgba(5,5,20,0.97);
-                border:2px solid #ff0055;
-                border-radius:16px; padding:28px 48px;
-                text-align:center; z-index:65;
-                color:#ff0055; font-size:22px; font-weight:900;
-                letter-spacing:2px; text-transform:uppercase;
-                box-shadow:0 0 40px rgba(255,0,85,0.5);
-                animation: popupIn 0.25s ease-out;
-            `;
-            badge.innerHTML = '\uD83C\uDFC6 OPPONENT LEFT THE RACE'
-                + '<br><span style="font-size:13px;color:#88a0c0;font-weight:400;letter-spacing:1px">'
-                + 'You win by default! Keep racing for your high score.</span>';
-            document.body.appendChild(badge);
-            setTimeout(() => { if (badge.parentNode) badge.parentNode.removeChild(badge); }, 5000);
+            // Opponent dropped connection without crashing — show as a win by default
+            isGameRunning = false;
+            clearPressedKeys();
+            stopEngineSound();
+            stopRainSound();
+            window.showMpResult('winner', Math.floor(score), oppNetScore, 'Opponent left the race');
         }
+
+        // ────────── SHOW RESULT MODAL ───────────────────────────────────────────
+        // outcome: 'winner' | 'loser'
+        window.showMpResult = function(outcome, myScore, oppScore, customSubtitle) {
+            const modal    = document.getElementById('mp-result-modal');
+            const box      = document.getElementById('mpr-box');
+            const trophy   = document.getElementById('mpr-trophy');
+            const title    = document.getElementById('mpr-title');
+            const subtitle = document.getElementById('mpr-subtitle');
+            const myEl     = document.getElementById('mpr-my-score');
+            const oppEl    = document.getElementById('mpr-opp-score');
+            const leaveBtn = document.getElementById('mpr-leave-btn');
+            if (!modal) return;
+
+            box.className = 'mpr-box ' + outcome;  // 'winner' or 'loser'
+
+            if (outcome === 'winner') {
+                trophy.textContent  = '🏆';
+                title.textContent   = 'YOU WIN!';
+                subtitle.textContent = customSubtitle || 'OPPONENT CRASHED';
+            } else {
+                trophy.textContent  = '💥';
+                title.textContent   = 'YOU LOSE!';
+                subtitle.textContent = customSubtitle || 'YOU CRASHED';
+            }
+
+            myEl.textContent  = myScore;
+            oppEl.textContent = oppScore;
+
+            // Re-trigger animation by cloning the node
+            const fresh = modal.cloneNode(true);
+            fresh.classList.remove('hidden');
+            modal.parentNode.replaceChild(fresh, modal);
+
+            // Wire up leave button on the fresh clone
+            fresh.querySelector('#mpr-leave-btn').addEventListener('click', () => {
+                fresh.classList.add('hidden');
+                window.quitToMainMenu();
+            });
+
+            startLobbyMusic();
+        };
 
         // ────────── CLEANUP ─────────────────────────────────────────────────────
         function cleanupMultiplayer() {
@@ -5080,20 +5309,34 @@
             oppHud.classList.add('hidden');
             mpStatusBadge.classList.add('hidden');
 
+            // Hide result modal if open
+            const existingResult = document.getElementById('mp-result-modal');
+            if (existingResult) existingResult.classList.add('hidden');
+
             const cd = document.getElementById('mp-countdown');
             if (cd && cd.parentNode) cd.parentNode.removeChild(cd);
 
             currentRoomCode   = null;
             myPlayerSlot      = null;
-            fallbackTriggered = false;
-            _lastMoveDist     = 0;
+            opponentAlive      = true;   // reset for next race
+            fallbackTriggered  = false;
+            isCountdownRunning = false;
+            _lastMoveDist      = 0;
+            oppNetScore        = 0;
+            oppNetX            = 0;
+            oppPrevX           = 0;
         }
 
         // ────────── PATCH gameOver / quitToMainMenu ────────────────────────────
         const _origGameOver = gameOver;
         window.gameOver = function() {
-            cleanupMultiplayer();
-            _origGameOver();
+            if (isMultiplayerMode) {
+                // Let gameOver() handle the multiplayer crash packet & scorecard
+                _origGameOver();
+            } else {
+                cleanupMultiplayer();
+                _origGameOver();
+            }
         };
 
         const _origQuit = quitToMainMenu;
@@ -5105,67 +5348,7 @@
         quitGameBtn.removeEventListener('click', quitToMainMenu);
         quitGameBtn.addEventListener('click', () => { window.quitToMainMenu(); });
 
-        // ────────── PATCH update() ─────────────────────────────────────────────
-        // We intercept the ORIGINAL update() to:
-        //   1. Capture moveDist BEFORE it's consumed (we wrap, not replace the logic)
-        //   2. After the original update runs, update the opponent ghost with the
-        //      EXACT same moveDist that was used for the world this frame.
-        //
-        // The original update() fully controls:
-        //   - playerCar via pressedKeys (keyboard-only, always local)
-        //   - trafficCars, road, scenery, score, speed, collision detection
-        //
-        // We add ONLY opponent ghost movement on top of that.
-        const _origUpdate = update;
-        window.update = function() {
-            // Run the original single-player update (controls, physics, collision)
-            _origUpdate();
 
-            // After original update, move the ghost with the world
-            if (isMultiplayerMode && opponentCar && isGameRunning && !isPaused) {
-                // _lastMoveDist is set by the injected line inside the original update
-                // If it's 0 (first frame), compute it safely
-                const md = _lastMoveDist > 0 ? _lastMoveDist : (currentSpeed * 0.016 * 90);
-                updateOpponentCar(md);
-                _lastMoveDist = 0;   // reset; will be filled next frame
-            }
-        };
-
-        // Inject a moveDist capture INTO the original update function by wrapping
-        // the moveDist computation. We do this by monkey-patching it at runtime:
-        // The original update() computes: const moveDist = currentSpeed * delta * 90;
-        // We intercept via a getter trick — but that's complex. Simpler: just
-        // compute it ourselves using the same formula with current values.
-        // We store lastFrameTime BEFORE _origUpdate runs so delta is correct.
-        window.update = (function(origFn) {
-            return function() {
-                const _preTime = performance.now();
-                origFn();   // run original (this updates lastFrameTime)
-                if (isMultiplayerMode && opponentCar && isGameRunning && !isPaused) {
-                    // Compute moveDist using pre-call time vs current speed
-                    const delta = Math.min((_preTime - (performance.now() - 1)) / 1000, 0.1);
-                    const md    = currentSpeed * Math.min((performance.now() - _preTime + 16) / 1000, 0.05) * 90;
-                    updateOpponentCar(Math.max(md, currentSpeed * (1/60) * 90 * 0.8));
-                }
-            };
-        })(window.update || update);
-
-        // ────────── GAME LOOP ──────────────────────────────────────────────────
-        cancelAnimationFrame(animFrameId);
-        function mpGameLoop() {
-            animFrameId = requestAnimationFrame(mpGameLoop);
-            if (isGameRunning && !isPaused) {
-                window.update();
-                renderer.render(scene, camera);
-            } else if (isGameRunning && isPaused) {
-                // Render but don't update (countdown phase)
-                renderer.render(scene, camera);
-            } else if (!isGameRunning && playerCar) {
-                playerCar.rotation.y += 0.015;
-                renderer.render(scene, camera);
-            }
-        }
-        animFrameId = requestAnimationFrame(mpGameLoop);
 
     
 </script>
