@@ -342,9 +342,11 @@
         /* ── Multiplayer Room Modal ──────────────────────────── */
         #mp-room-modal {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(0,5,20,0.92) 0%, rgba(0,0,8,0.97) 100%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 5, 20, 0.92) 0%, rgba(0, 0, 8, 0.97) 100%);
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -365,7 +367,7 @@
             background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 18px rgba(0,240,255,0.5));
+            filter: drop-shadow(0 0 18px rgba(0, 240, 255, 0.5));
         }
 
         #mp-room-modal .mp-subtitle {
@@ -381,11 +383,11 @@
             flex-direction: column;
             align-items: center;
             gap: 16px;
-            background: rgba(0,240,255,0.04);
-            border: 1px solid rgba(0,240,255,0.25);
+            background: rgba(0, 240, 255, 0.04);
+            border: 1px solid rgba(0, 240, 255, 0.25);
             border-radius: 16px;
             padding: 32px 48px;
-            box-shadow: 0 0 40px rgba(0,240,255,0.1), inset 0 0 30px rgba(0,240,255,0.04);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.1), inset 0 0 30px rgba(0, 240, 255, 0.04);
         }
 
         .mp-code-label {
@@ -397,8 +399,8 @@
         }
 
         #mp-room-input {
-            background: rgba(0,5,20,0.8);
-            border: 2px solid rgba(0,240,255,0.5);
+            background: rgba(0, 5, 20, 0.8);
+            border: 2px solid rgba(0, 240, 255, 0.5);
             border-radius: 10px;
             color: #00f0ff;
             font-size: 42px;
@@ -410,17 +412,17 @@
             padding: 14px 10px;
             outline: none;
             caret-color: #00f0ff;
-            box-shadow: 0 0 20px rgba(0,240,255,0.2), inset 0 0 12px rgba(0,240,255,0.05);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 12px rgba(0, 240, 255, 0.05);
             transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         #mp-room-input:focus {
             border-color: #00f0ff;
-            box-shadow: 0 0 30px rgba(0,240,255,0.35), inset 0 0 15px rgba(0,240,255,0.08);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.35), inset 0 0 15px rgba(0, 240, 255, 0.08);
         }
 
         #mp-room-input::placeholder {
-            color: rgba(0,240,255,0.25);
+            color: rgba(0, 240, 255, 0.25);
             letter-spacing: 8px;
         }
 
@@ -446,7 +448,7 @@
             border-radius: 35px;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: 0 0 25px rgba(0,240,255,0.5);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
             text-transform: uppercase;
             letter-spacing: 2px;
         }
@@ -461,8 +463,8 @@
             font-size: 15px;
             font-weight: 800;
             color: #fff;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 35px;
             cursor: pointer;
             transition: all 0.25s ease;
@@ -471,7 +473,7 @@
         }
 
         .mp-cancel-btn:hover {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
             transform: translateY(-2px);
         }
 
@@ -489,7 +491,8 @@
         /* Room Not Found popup */
         #mp-notfound-popup {
             position: absolute;
-            top: 50%; left: 50%;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%) scale(0.88);
             background: rgba(10, 5, 15, 0.97);
             border: 2px solid #ff0055;
@@ -497,17 +500,28 @@
             padding: 32px 48px;
             text-align: center;
             z-index: 60;
-            box-shadow: 0 0 40px rgba(255,0,85,0.4), inset 0 0 20px rgba(255,0,85,0.05);
+            box-shadow: 0 0 40px rgba(255, 0, 85, 0.4), inset 0 0 20px rgba(255, 0, 85, 0.05);
             backdrop-filter: blur(10px);
             animation: popupIn 0.25s ease-out forwards;
         }
 
         @keyframes popupIn {
-            from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-            to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
         }
 
-        #mp-notfound-popup .nf-icon { font-size: 40px; margin-bottom: 10px; }
+        #mp-notfound-popup .nf-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
         #mp-notfound-popup .nf-title {
             font-size: 22px;
             font-weight: 900;
@@ -515,12 +529,14 @@
             letter-spacing: 2px;
             text-transform: uppercase;
         }
+
         #mp-notfound-popup .nf-sub {
             margin-top: 8px;
             font-size: 13px;
             color: #88a0c0;
             letter-spacing: 1px;
         }
+
         #mp-notfound-close {
             margin-top: 20px;
             padding: 10px 30px;
@@ -535,7 +551,11 @@
             letter-spacing: 2px;
             transition: all 0.2s;
         }
-        #mp-notfound-close:hover { filter: brightness(1.2); transform: translateY(-2px); }
+
+        #mp-notfound-close:hover {
+            filter: brightness(1.2);
+            transform: translateY(-2px);
+        }
 
         /* Opponent HUD */
         #opponent-hud {
@@ -552,15 +572,15 @@
         }
 
         .opp-card {
-            background: rgba(10,15,30,0.82);
-            border: 1px solid rgba(255,0,85,0.4);
+            background: rgba(10, 15, 30, 0.82);
+            border: 1px solid rgba(255, 0, 85, 0.4);
             border-bottom: 3px solid #ff0055;
             padding: 6px 16px;
             border-radius: 6px 6px 0 0;
             backdrop-filter: blur(10px);
             min-width: 160px;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(255,0,85,0.15);
+            box-shadow: 0 4px 20px rgba(255, 0, 85, 0.15);
         }
 
         .opp-label {
@@ -602,7 +622,7 @@
             font-weight: 900;
             color: #ff0055;
             font-family: 'Courier New', monospace;
-            text-shadow: 0 0 10px rgba(255,0,85,0.5);
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
             line-height: 1;
         }
 
@@ -612,8 +632,8 @@
             bottom: max(90px, env(safe-area-inset-bottom) + 70px);
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,240,255,0.12);
-            border: 1px solid rgba(0,240,255,0.4);
+            background: rgba(0, 240, 255, 0.12);
+            border: 1px solid rgba(0, 240, 255, 0.4);
             border-radius: 20px;
             padding: 5px 16px;
             color: #00f0ff;
@@ -719,7 +739,10 @@
         #landscape-warning {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: #050512;
             color: #00f0ff;
             z-index: 999999;
@@ -729,31 +752,45 @@
             text-align: center;
             padding: 20px;
         }
+
         #landscape-warning svg {
-            width: 80px; height: 80px;
+            width: 80px;
+            height: 80px;
             margin-bottom: 20px;
             fill: none;
             stroke: #00f0ff;
             stroke-width: 2;
             animation: rotatePhone 2s infinite ease-in-out;
         }
+
         #landscape-warning h2 {
             font-size: 24px;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-bottom: 10px;
         }
+
         #landscape-warning p {
             border: none;
             background: transparent;
             font-size: 14px;
             color: #88a0c0;
         }
+
         @keyframes rotatePhone {
-            0% { transform: rotate(0deg); }
-            50% { transform: rotate(-90deg); }
-            100% { transform: rotate(-90deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(-90deg);
+            }
+
+            100% {
+                transform: rotate(-90deg);
+            }
         }
+
         @media screen and (orientation: portrait) and (max-width: 900px) {
             #landscape-warning {
                 display: flex;
@@ -763,21 +800,30 @@
         /* ── Multiplayer Race Result Modal ── */
         #mp-result-modal {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 200;
-            background: radial-gradient(circle at center, rgba(5,5,20,0.96) 0%, rgba(0,0,8,0.99) 100%);
+            background: radial-gradient(circle at center, rgba(5, 5, 20, 0.96) 0%, rgba(0, 0, 8, 0.99) 100%);
             backdrop-filter: blur(20px);
             animation: mpResultFadeIn 0.5s ease-out;
         }
+
         @keyframes mpResultFadeIn {
-            from { opacity: 0; }
-            to   { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
+
         #mp-result-modal .mpr-box {
             display: flex;
             flex-direction: column;
@@ -789,26 +835,41 @@
             width: 90%;
             text-align: center;
         }
+
         #mp-result-modal .mpr-box.winner {
             background: rgba(0, 255, 100, 0.05);
             border: 2px solid rgba(0, 255, 100, 0.5);
             box-shadow: 0 0 60px rgba(0, 255, 100, 0.2), inset 0 0 40px rgba(0, 255, 100, 0.05);
         }
+
         #mp-result-modal .mpr-box.loser {
             background: rgba(255, 0, 85, 0.05);
             border: 2px solid rgba(255, 0, 85, 0.5);
             box-shadow: 0 0 60px rgba(255, 0, 85, 0.2), inset 0 0 40px rgba(255, 0, 85, 0.05);
         }
+
         #mp-result-modal .mpr-trophy {
             font-size: 72px;
             line-height: 1;
-            animation: mprTrophyBounce 0.6s cubic-bezier(.175,.885,.32,1.275);
+            animation: mprTrophyBounce 0.6s cubic-bezier(.175, .885, .32, 1.275);
         }
+
         @keyframes mprTrophyBounce {
-            0%   { transform: scale(0); opacity: 0; }
-            70%  { transform: scale(1.15); opacity: 1; }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            70% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
+
         #mp-result-modal .mpr-title {
             font-size: 38px;
             font-weight: 900;
@@ -816,14 +877,17 @@
             letter-spacing: 4px;
             font-family: 'Courier New', monospace;
         }
+
         #mp-result-modal .mpr-box.winner .mpr-title {
             color: #00ff88;
             text-shadow: 0 0 30px #00ff88, 0 0 60px rgba(0, 255, 136, 0.4);
         }
+
         #mp-result-modal .mpr-box.loser .mpr-title {
             color: #ff0055;
             text-shadow: 0 0 30px #ff0055, 0 0 60px rgba(255, 0, 85, 0.4);
         }
+
         #mp-result-modal .mpr-subtitle {
             font-size: 12px;
             letter-spacing: 3px;
@@ -831,26 +895,31 @@
             text-transform: uppercase;
             margin-top: -10px;
         }
+
         #mp-result-modal .mpr-scores {
             display: flex;
             gap: 16px;
             justify-content: center;
             width: 100%;
         }
+
         #mp-result-modal .mpr-score-card {
             flex: 1;
             padding: 14px 10px;
             border-radius: 10px;
             min-width: 100px;
         }
+
         #mp-result-modal .mpr-score-card.my-score {
             background: rgba(0, 240, 255, 0.08);
             border: 1px solid rgba(0, 240, 255, 0.35);
         }
+
         #mp-result-modal .mpr-score-card.opp-score {
             background: rgba(255, 0, 85, 0.08);
             border: 1px solid rgba(255, 0, 85, 0.35);
         }
+
         #mp-result-modal .mpr-score-label {
             font-size: 9px;
             font-weight: 800;
@@ -858,15 +927,23 @@
             text-transform: uppercase;
             margin-bottom: 6px;
         }
-        .my-score .mpr-score-label { color: #00f0ff; }
-        .opp-score .mpr-score-label { color: #ff0055; }
+
+        .my-score .mpr-score-label {
+            color: #00f0ff;
+        }
+
+        .opp-score .mpr-score-label {
+            color: #ff0055;
+        }
+
         #mp-result-modal .mpr-score-val {
             font-size: 28px;
             font-weight: 900;
             color: #fff;
             font-family: 'Courier New', monospace;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
+
         #mp-result-modal .mpr-leave-btn {
             padding: 13px 40px;
             font-size: 14px;
@@ -877,12 +954,13 @@
             border-radius: 35px;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: 0 0 25px rgba(255,0,85,0.5);
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.5);
             text-transform: uppercase;
             letter-spacing: 2px;
             margin-top: 4px;
             -webkit-tap-highlight-color: transparent;
         }
+
         #mp-result-modal .mpr-leave-btn:hover,
         #mp-result-modal .mpr-leave-btn:active {
             transform: translateY(-2px) scale(1.04);
@@ -1042,7 +1120,9 @@
             </div>
             <div class="btn-group">
                 <button class="action-btn" id="startBtn">START ENGINE</button>
-                <button class="action-btn secondary" id="multiplayerBtn" style="background: linear-gradient(135deg,#00f0ff 0%,#0077ff 100%); box-shadow: 0 0 25px rgba(0,240,255,0.45);">⚡ MULTIPLAYER</button>
+                <button class="action-btn secondary" id="multiplayerBtn"
+                    style="background: linear-gradient(135deg,#00f0ff 0%,#0077ff 100%); box-shadow: 0 0 25px rgba(0,240,255,0.45);">⚡
+                    MULTIPLAYER</button>
                 <button class="action-btn secondary" id="menuSettingsBtn">SETTINGS</button>
             </div>
         </div>
@@ -1070,8 +1150,10 @@
                     <input type="range" id="btnBottomSlider" min="15" max="60" value="25">
                 </div>
                 <div class="controls-info-box">
-                    <strong>PC Controls:</strong> W (Speed Up), S (Brake), A/D (Steer), Space/H (Horn), Shift (Toggle Constant Boost Lock).<br>
-                    <strong>Mobile Controls:</strong> Use on-screen buttons for Steering (◄ ►), Nitro Boost (⚡), Boost Lock (🚀), Brake (🛑), and Horn (📢).
+                    <strong>PC Controls:</strong> W (Speed Up), S (Brake), A/D (Steer), Space/H (Horn), Shift (Toggle
+                    Constant Boost Lock).<br>
+                    <strong>Mobile Controls:</strong> Use on-screen buttons for Steering (◄ ►), Nitro Boost (⚡), Boost
+                    Lock (🚀), Brake (🛑), and Horn (📢).
                 </div>
             </div>
             <div class="btn-group">
@@ -1089,7 +1171,8 @@
         <div class="mp-subtitle">1v1 Online Race</div>
         <div class="mp-code-box">
             <div class="mp-code-label">🔐 Enter 5-Digit Room Code</div>
-            <input id="mp-room-input" type="text" maxlength="5" pattern="[0-9]*" inputmode="numeric" placeholder="_ _ _ _ _" autocomplete="off" spellcheck="false" />
+            <input id="mp-room-input" type="text" maxlength="5" pattern="[0-9]*" inputmode="numeric"
+                placeholder="_ _ _ _ _" autocomplete="off" spellcheck="false" />
             <div class="mp-hint">Share the same code with your friend to connect</div>
         </div>
         <div id="mp-waiting-msg" class="hidden">🔗 Connecting to room... waiting for opponent</div>
@@ -1844,15 +1927,15 @@
             const group = new THREE.Group();
 
             // ── Materials ──────────────────────────────────────────────
-            const bodyMat   = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.12, metalness: 0.90 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.12, metalness: 0.90 });
             const carbonMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0e, roughness: 0.25, metalness: 0.80 });
-            const glassMat  = new THREE.MeshStandardMaterial({ color: 0x0d1a2e, roughness: 0.05, metalness: 0.95, transparent: true, opacity: 0.82 });
+            const glassMat = new THREE.MeshStandardMaterial({ color: 0x0d1a2e, roughness: 0.05, metalness: 0.95, transparent: true, opacity: 0.82 });
             const chromeMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.08, metalness: 0.98 });
-            const tireMat   = new THREE.MeshStandardMaterial({ color: 0x0d0d0d, roughness: 0.90, metalness: 0.05 });
-            const rimMat    = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.10, metalness: 0.95 });
-            const discMat   = new THREE.MeshStandardMaterial({ color: 0xb0b0b0, roughness: 0.30, metalness: 0.85 });
-            const glowMat   = new THREE.MeshBasicMaterial({ color: isPlayer ? 0x00f0ff : 0xff3300 });
-            const darkMat   = new THREE.MeshStandardMaterial({ color: 0x111118, roughness: 0.4, metalness: 0.6 });
+            const tireMat = new THREE.MeshStandardMaterial({ color: 0x0d0d0d, roughness: 0.90, metalness: 0.05 });
+            const rimMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.10, metalness: 0.95 });
+            const discMat = new THREE.MeshStandardMaterial({ color: 0xb0b0b0, roughness: 0.30, metalness: 0.85 });
+            const glowMat = new THREE.MeshBasicMaterial({ color: isPlayer ? 0x00f0ff : 0xff3300 });
+            const darkMat = new THREE.MeshStandardMaterial({ color: 0x111118, roughness: 0.4, metalness: 0.6 });
 
             // ── Main low-slung body (flat GT profile) ──────────────────
             const mainBody = new THREE.Mesh(new THREE.BoxGeometry(2.05, 0.38, 4.2), bodyMat);
@@ -1990,9 +2073,9 @@
             const wheelW = 0.32;
             const wheelPositions = [
                 { x: -1.12, z: -1.38 },
-                { x:  1.12, z: -1.38 },
-                { x: -1.12, z:  1.38 },
-                { x:  1.12, z:  1.38 },
+                { x: 1.12, z: -1.38 },
+                { x: -1.12, z: 1.38 },
+                { x: 1.12, z: 1.38 },
             ];
 
             wheelPositions.forEach(({ x, z }) => {
@@ -2337,13 +2420,13 @@
         function createTataTruck() {
             const group = new THREE.Group();
 
-            const cabMat  = new THREE.MeshStandardMaterial({ color: 0xcc5500, roughness: 0.28, metalness: 0.55 });
-            const chromeMat= new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.08, metalness: 0.96 });
+            const cabMat = new THREE.MeshStandardMaterial({ color: 0xcc5500, roughness: 0.28, metalness: 0.55 });
+            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.08, metalness: 0.96 });
             const glassMat = new THREE.MeshStandardMaterial({ color: 0x0d1824, roughness: 0.06, metalness: 0.9, transparent: true, opacity: 0.78 });
-            const tireMat  = new THREE.MeshStandardMaterial({ color: 0x0c0c0c, roughness: 0.88, metalness: 0.05 });
-            const rimMat   = new THREE.MeshStandardMaterial({ color: 0xbbbbbb, roughness: 0.15, metalness: 0.90 });
+            const tireMat = new THREE.MeshStandardMaterial({ color: 0x0c0c0c, roughness: 0.88, metalness: 0.05 });
+            const rimMat = new THREE.MeshStandardMaterial({ color: 0xbbbbbb, roughness: 0.15, metalness: 0.90 });
             const cargoMat = new THREE.MeshStandardMaterial({ color: 0x1a3852, roughness: 0.55, metalness: 0.20 });
-            const darkMat  = new THREE.MeshStandardMaterial({ color: 0x0e0e12, roughness: 0.5, metalness: 0.4 });
+            const darkMat = new THREE.MeshStandardMaterial({ color: 0x0e0e12, roughness: 0.5, metalness: 0.4 });
 
             // ── CAB ─────────────────────────────────────────────────────
             // Main cab body
@@ -2503,12 +2586,12 @@
         function createSchoolBus() {
             const group = new THREE.Group();
 
-            const busMat  = new THREE.MeshStandardMaterial({ color: 0xf5c800, roughness: 0.28, metalness: 0.38 });
-            const darkMat  = new THREE.MeshStandardMaterial({ color: 0x0c0c10, roughness: 0.5, metalness: 0.3 });
-            const chromeMat= new THREE.MeshStandardMaterial({ color: 0xd8d8d8, roughness: 0.10, metalness: 0.94 });
+            const busMat = new THREE.MeshStandardMaterial({ color: 0xf5c800, roughness: 0.28, metalness: 0.38 });
+            const darkMat = new THREE.MeshStandardMaterial({ color: 0x0c0c10, roughness: 0.5, metalness: 0.3 });
+            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xd8d8d8, roughness: 0.10, metalness: 0.94 });
             const glassMat = new THREE.MeshStandardMaterial({ color: 0x0e1828, roughness: 0.06, metalness: 0.9, transparent: true, opacity: 0.72 });
-            const tireMat  = new THREE.MeshStandardMaterial({ color: 0x0d0d0d, roughness: 0.88, metalness: 0.05 });
-            const rimMat   = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, roughness: 0.18, metalness: 0.88 });
+            const tireMat = new THREE.MeshStandardMaterial({ color: 0x0d0d0d, roughness: 0.88, metalness: 0.05 });
+            const rimMat = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, roughness: 0.18, metalness: 0.88 });
 
             // Main body
             const body = new THREE.Mesh(new THREE.BoxGeometry(2.62, 2.60, 7.55), busMat);
@@ -2641,12 +2724,12 @@
         function createMahindraThar() {
             const group = new THREE.Group();
 
-            const bodyMat  = new THREE.MeshStandardMaterial({ color: 0xb83030, roughness: 0.28, metalness: 0.58 });
-            const darkMat  = new THREE.MeshStandardMaterial({ color: 0x0e0e12, roughness: 0.55, metalness: 0.35 });
-            const chromeMat= new THREE.MeshStandardMaterial({ color: 0xd0d0d0, roughness: 0.10, metalness: 0.94 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: 0xb83030, roughness: 0.28, metalness: 0.58 });
+            const darkMat = new THREE.MeshStandardMaterial({ color: 0x0e0e12, roughness: 0.55, metalness: 0.35 });
+            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xd0d0d0, roughness: 0.10, metalness: 0.94 });
             const glassMat = new THREE.MeshStandardMaterial({ color: 0x0e1820, roughness: 0.06, metalness: 0.9, transparent: true, opacity: 0.75 });
-            const tireMat  = new THREE.MeshStandardMaterial({ color: 0x0d0d0d, roughness: 0.92, metalness: 0.04 });
-            const rimMat   = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.25, metalness: 0.80 });
+            const tireMat = new THREE.MeshStandardMaterial({ color: 0x0d0d0d, roughness: 0.92, metalness: 0.04 });
+            const rimMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.25, metalness: 0.80 });
             const softTopMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.90 });
 
             // ── Main body (tall off-road profile) ───────────────────────
@@ -2809,15 +2892,15 @@
             const bikeColors = [0xff2200, 0x00d4ff, 0x22cc44, 0xffaa00, 0x8822ee];
             const chosenColor = bikeColors[Math.floor(Math.random() * bikeColors.length)];
 
-            const bodyMat    = new THREE.MeshStandardMaterial({ color: chosenColor, roughness: 0.13, metalness: 0.87 });
-            const darkMat    = new THREE.MeshStandardMaterial({ color: 0x0e0e12, roughness: 0.65, metalness: 0.30 });
-            const chromeMat  = new THREE.MeshStandardMaterial({ color: 0xd8d8d8, roughness: 0.08, metalness: 0.96 });
-            const tireMat    = new THREE.MeshStandardMaterial({ color: 0x0c0c0c, roughness: 0.90, metalness: 0.04 });
-            const rimMat     = new THREE.MeshStandardMaterial({ color: 0xbbbbbb, roughness: 0.12, metalness: 0.92 });
-            const carbonMat  = new THREE.MeshStandardMaterial({ color: 0x080a0e, roughness: 0.28, metalness: 0.75 });
-            const glassMat   = new THREE.MeshStandardMaterial({ color: 0x0a1a2e, roughness: 0.05, metalness: 0.9, transparent: true, opacity: 0.72 });
-            const riderMat   = new THREE.MeshStandardMaterial({ color: 0x0a0a18, roughness: 0.40 });
-            const helmetMat  = new THREE.MeshStandardMaterial({ color: chosenColor, roughness: 0.12, metalness: 0.85 });
+            const bodyMat = new THREE.MeshStandardMaterial({ color: chosenColor, roughness: 0.13, metalness: 0.87 });
+            const darkMat = new THREE.MeshStandardMaterial({ color: 0x0e0e12, roughness: 0.65, metalness: 0.30 });
+            const chromeMat = new THREE.MeshStandardMaterial({ color: 0xd8d8d8, roughness: 0.08, metalness: 0.96 });
+            const tireMat = new THREE.MeshStandardMaterial({ color: 0x0c0c0c, roughness: 0.90, metalness: 0.04 });
+            const rimMat = new THREE.MeshStandardMaterial({ color: 0xbbbbbb, roughness: 0.12, metalness: 0.92 });
+            const carbonMat = new THREE.MeshStandardMaterial({ color: 0x080a0e, roughness: 0.28, metalness: 0.75 });
+            const glassMat = new THREE.MeshStandardMaterial({ color: 0x0a1a2e, roughness: 0.05, metalness: 0.9, transparent: true, opacity: 0.72 });
+            const riderMat = new THREE.MeshStandardMaterial({ color: 0x0a0a18, roughness: 0.40 });
+            const helmetMat = new THREE.MeshStandardMaterial({ color: chosenColor, roughness: 0.12, metalness: 0.85 });
 
             // ── Frame ────────────────────────────────────────────────────
             [-0.20, 0.20].forEach(x => {
@@ -2902,7 +2985,7 @@
             };
 
             group.add(makeNpcWheel(-1.22, 0.36));
-            group.add(makeNpcWheel( 1.18, 0.38));
+            group.add(makeNpcWheel(1.18, 0.38));
 
             // ── Body Fairing ──────────────────────────────────────────────
             const frontFairing = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.34, 0.85), bodyMat);
@@ -4219,10 +4302,10 @@
                 if (window.conn && window.conn.open) {
                     try {
                         window.conn.send({
-                            type:  'opponent_crashed',
+                            type: 'opponent_crashed',
                             score: myFinalScore
                         });
-                    } catch(e) {}
+                    } catch (e) { }
                 }
                 // Show loser screen on this device
                 setTimeout(() => {
@@ -4649,7 +4732,7 @@
 
             // Direct call to opponent vehicle sync every frame
             if (typeof isMultiplayerMode !== 'undefined' && isMultiplayerMode && opponentCar && !isPaused) {
-                updateOpponentCar(moveDist);
+                updateOpponentCar(delta);
             }
         }
 
@@ -4697,51 +4780,53 @@
 
         // ────────── STATE ──────────────────────────────────────────────────────
         let isMultiplayerMode = false;
-        let peer              = null;
-        let conn              = null;
-        let myPlayerSlot      = null;    // 'host' | 'client'
-        let opponentCar       = null;    // ghost mesh (blue)
-        let syncInterval      = null;
-        let envSyncInterval   = null;    // environment sync (host → client)
-        let opponentAlive     = true;
-        let currentRoomCode   = null;
+        let peer = null;
+        let conn = null;
+        let myPlayerSlot = null;    // 'host' | 'client'
+        let opponentCar = null;    // ghost mesh (blue)
+        let syncInterval = null;
+        let envSyncInterval = null;    // environment sync (host → client)
+        let opponentAlive = true;
+        let currentRoomCode = null;
         let fallbackTriggered = false;
 
         // Latest opponent network state
-        let oppNetX     = 0;            // lane X position from peer
+        let oppNetX = 0;            // lane X position from peer
         let oppNetScore = 0;
         let oppNetSpeed = 0;
-        let oppPrevX    = 0;            // previous X for tilt calculation
+        let oppRawSpeed = 0.28;         // local speed unit for relative Z physics
+        let oppVehicleType = 'car';       // 'car' or 'bike' selected by opponent in lobby
+        let oppPrevX = 0;            // previous X for tilt calculation
 
         // moveDist captured from within the original update() each frame
         let _lastMoveDist = 0;
 
         // Expose key state to window so single-player gameOver() can read them
         Object.defineProperty(window, 'isMultiplayerMode', { get: () => isMultiplayerMode, configurable: true });
-        Object.defineProperty(window, 'conn',              { get: () => conn,              configurable: true });
-        Object.defineProperty(window, 'oppNetScore',       { get: () => oppNetScore,       configurable: true });
+        Object.defineProperty(window, 'conn', { get: () => conn, configurable: true });
+        Object.defineProperty(window, 'oppNetScore', { get: () => oppNetScore, configurable: true });
 
 
         // ────────── DOM ────────────────────────────────────────────────────────
-        const mpRoomModal     = document.getElementById('mp-room-modal');
-        const mpRoomInput     = document.getElementById('mp-room-input');
-        const mpJoinBtn       = document.getElementById('mp-join-btn');
-        const mpCancelBtn     = document.getElementById('mp-cancel-btn');
-        const mpWaitingMsg    = document.getElementById('mp-waiting-msg');
-        const mpNotFound      = document.getElementById('mp-notfound-popup');
+        const mpRoomModal = document.getElementById('mp-room-modal');
+        const mpRoomInput = document.getElementById('mp-room-input');
+        const mpJoinBtn = document.getElementById('mp-join-btn');
+        const mpCancelBtn = document.getElementById('mp-cancel-btn');
+        const mpWaitingMsg = document.getElementById('mp-waiting-msg');
+        const mpNotFound = document.getElementById('mp-notfound-popup');
         const mpNotFoundClose = document.getElementById('mp-notfound-close');
-        const oppHud          = document.getElementById('opponent-hud');
-        const oppScoreEl      = document.getElementById('opp-score-display');
-        const oppSpeedEl      = document.getElementById('opp-speed-display');
-        const mpStatusBadge   = document.getElementById('mp-status-badge');
-        const multiplayerBtn  = document.getElementById('multiplayerBtn');
+        const oppHud = document.getElementById('opponent-hud');
+        const oppScoreEl = document.getElementById('opp-score-display');
+        const oppSpeedEl = document.getElementById('opp-speed-display');
+        const mpStatusBadge = document.getElementById('mp-status-badge');
+        const multiplayerBtn = document.getElementById('multiplayerBtn');
 
         // ────────── OPEN ROOM MODAL ────────────────────────────────────────────
         multiplayerBtn.addEventListener('click', () => {
             initAudio();
             mpRoomInput.value = '';
             mpWaitingMsg.classList.add('hidden');
-            mpJoinBtn.disabled    = false;
+            mpJoinBtn.disabled = false;
             mpJoinBtn.textContent = 'JOIN ROOM \uD83D\uDE80';
             screenOverlay.classList.add('hidden');
             mpRoomModal.classList.remove('hidden');
@@ -4769,11 +4854,11 @@
             const code = mpRoomInput.value.trim();
             if (code.length !== 5) {
                 mpRoomInput.style.borderColor = '#ff0055';
-                mpRoomInput.style.boxShadow   = '0 0 20px rgba(255,0,85,0.4)';
+                mpRoomInput.style.boxShadow = '0 0 20px rgba(255,0,85,0.4)';
                 setTimeout(() => { mpRoomInput.style.borderColor = ''; mpRoomInput.style.boxShadow = ''; }, 1000);
                 return;
             }
-            mpJoinBtn.disabled    = true;
+            mpJoinBtn.disabled = true;
             mpJoinBtn.textContent = 'Connecting\u2026';
             enterRoom(code);
         });
@@ -4782,9 +4867,9 @@
         // Strategy: first try to CONNECT to the room (become client).
         // If nothing answers in 2 s, become HOST and wait.
         function enterRoom(code) {
-            currentRoomCode   = code;
+            currentRoomCode = code;
             fallbackTriggered = false;
-            const roomId      = 'cyberracer-' + code;
+            const roomId = 'cyberracer-' + code;
 
             peer = new Peer();   // random ephemeral ID
 
@@ -4795,7 +4880,12 @@
                     if (myPlayerSlot) return;       // race condition guard
                     myPlayerSlot = 'client';
                     setupConnection(conn);
-                    // Client starts game immediately (host will send env_init)
+                    try {
+                        conn.send({
+                            type: 'client_ready',
+                            vehicleType: selectedVehicleType
+                        });
+                    } catch (e) { }
                     beginCountdown();
                 });
 
@@ -4868,10 +4958,29 @@
 
                 // ── Regular position/score sync (20 Hz) ──
                 if (data.type === 'sync') {
-                    oppPrevX    = oppNetX;
-                    oppNetX     = data.x     !== undefined ? data.x     : oppNetX;
+                    oppPrevX = oppNetX;
+                    oppNetX = data.x !== undefined ? data.x : oppNetX;
                     oppNetScore = data.score !== undefined ? data.score : oppNetScore;
                     oppNetSpeed = data.speed !== undefined ? data.speed : oppNetSpeed;
+                    if (data.rawSpeed !== undefined) {
+                        oppRawSpeed = data.rawSpeed;
+                    } else if (data.speed !== undefined) {
+                        oppRawSpeed = data.speed / 220;
+                    }
+
+                    // Dynamically adapt to opponent's chosen vehicle from lobby (car or bike)
+                    if (data.vehicleType && data.vehicleType !== oppVehicleType) {
+                        oppVehicleType = data.vehicleType;
+                        if (opponentCar) {
+                            const curX = opponentCar.position.x;
+                            const curZ = opponentCar.position.z;
+                            spawnOpponentCar();
+                            if (opponentCar) {
+                                opponentCar.position.x = curX;
+                                opponentCar.position.z = curZ;
+                            }
+                        }
+                    }
 
                     // Update opponent HUD — never touches playerCar or controls
                     oppScoreEl.textContent = oppNetScore;
@@ -4880,12 +4989,40 @@
                     if (!data.alive && isGameRunning) handleOpponentDisconnect();
                 }
 
+                // ── Client ready with vehicle type ──
+                else if (data.type === 'client_ready') {
+                    if (data.vehicleType && data.vehicleType !== oppVehicleType) {
+                        oppVehicleType = data.vehicleType;
+                        if (opponentCar) {
+                            const curX = opponentCar.position.x;
+                            const curZ = opponentCar.position.z;
+                            spawnOpponentCar();
+                            if (opponentCar) {
+                                opponentCar.position.x = curX;
+                                opponentCar.position.z = curZ;
+                            }
+                        }
+                    }
+                }
+
                 // ── Host → Client: initial environment setup ──
                 else if (data.type === 'env_init') {
                     // Apply the SAME weather and light state the host has
                     setWeatherEnvironment(data.weather);
                     trafficLightState = data.lightState;
                     trafficLightTimer = data.lightTimer;
+                    if (data.vehicleType && data.vehicleType !== oppVehicleType) {
+                        oppVehicleType = data.vehicleType;
+                        if (opponentCar) {
+                            const curX = opponentCar.position.x;
+                            const curZ = opponentCar.position.z;
+                            spawnOpponentCar();
+                            if (opponentCar) {
+                                opponentCar.position.x = curX;
+                                opponentCar.position.z = curZ;
+                            }
+                        }
+                    }
                 }
 
                 // ── Host → Client: periodic environment sync ──
@@ -4942,10 +5079,11 @@
 
                 if (conn && conn.open) {
                     conn.send({
-                        type:       'env_init',
-                        weather:    sharedWeather,
+                        type: 'env_init',
+                        weather: sharedWeather,
                         lightState: 'GREEN',
-                        lightTimer: 0
+                        lightTimer: 0,
+                        vehicleType: selectedVehicleType
                     });
                     setTimeout(() => {
                         if (conn && conn.open) conn.send({ type: 'countdown_go' });
@@ -4994,7 +5132,7 @@
             function showNum() {
                 overlay.innerHTML = '';
                 const label = nums[idx];
-                const isGo  = label === 'GO!';
+                const isGo = label === 'GO!';
 
                 const n = document.createElement('div');
                 n.textContent = label;
@@ -5038,19 +5176,19 @@
             mpWaitingMsg.classList.add('hidden');
             mpNotFound.classList.remove('hidden');
             setTimeout(() => { mpNotFound.classList.add('hidden'); }, 4000);
-            mpJoinBtn.disabled    = false;
+            mpJoinBtn.disabled = false;
             mpJoinBtn.textContent = 'JOIN ROOM \uD83D\uDE80';
         }
 
         function abortRoomConnection() {
             fallbackTriggered = false;
             isCountdownRunning = false;
-            if (conn) { try { conn.close();   } catch(e){} conn = null; }
-            if (peer) { try { peer.destroy(); } catch(e){} peer = null; }
-            if (syncInterval)    { clearInterval(syncInterval);    syncInterval    = null; }
+            if (conn) { try { conn.close(); } catch (e) { } conn = null; }
+            if (peer) { try { peer.destroy(); } catch (e) { } peer = null; }
+            if (syncInterval) { clearInterval(syncInterval); syncInterval = null; }
             if (envSyncInterval) { clearInterval(envSyncInterval); envSyncInterval = null; }
             currentRoomCode = null;
-            myPlayerSlot    = null;
+            myPlayerSlot = null;
         }
 
         // ────────── START MULTIPLAYER SESSION ──────────────────────────────────
@@ -5091,11 +5229,18 @@
         function spawnOpponentCar() {
             if (opponentCar) { scene.remove(opponentCar); opponentCar = null; }
 
-            opponentCar = createRealisticCar(0x0044ff, false);
+            // Render the vehicle type (Car or Bike) chosen by the opponent in the lobby
+            const isBike = (oppVehicleType === 'bike');
+            const colorHex = isBike ? 0x00f0ff : 0x0044ff;
+            if (isBike) {
+                opponentCar = createRealisticBike(colorHex, false);
+            } else {
+                opponentCar = createRealisticCar(colorHex, false);
+            }
             opponentCar.userData.isOpponentGhost = true;   // safety tag
 
             // Blue neon under-glow
-            const glow = new THREE.PointLight(0x0044ff, 4, 12);
+            const glow = new THREE.PointLight(colorHex, 4, 12);
             glow.position.set(0, -0.15, 0);
             opponentCar.add(glow);
 
@@ -5103,9 +5248,9 @@
             // Host sees Client on LEFT (-2.5), Client sees Host on RIGHT (+2.5)
             const oppStartX = (myPlayerSlot === 'host') ? -2.5 : 2.5;
             opponentCar.position.set(oppStartX, 0, 0);
-            oppNetX  = oppStartX;
+            oppNetX = oppStartX;
             oppPrevX = oppStartX;
-            
+
             // Add Opponent Marker UI
             let marker = document.getElementById('opponent-marker');
             if (!marker) {
@@ -5131,16 +5276,12 @@
                 document.body.appendChild(marker);
             }
 
-
             scene.add(opponentCar);
             opponentAlive = true;
         }
 
         // ────────── OPPONENT CAR FRAME UPDATE ──────────────────────────────────
-        // Called ONCE per frame inside the patched update().
-        // moveDist is passed in from the ORIGINAL update's calculation so it's
-        // always accurate and never re-computed from a stale lastFrameTime.
-        function updateOpponentCar(moveDist) {
+        function updateOpponentCar(delta) {
             if (!opponentCar || !isMultiplayerMode) return;
 
             // ── X: smoothly lerp to the latest network X ──
@@ -5150,40 +5291,43 @@
                 xLerp, -mainRoadVehicleLimit, mainRoadVehicleLimit
             );
 
-            // ── Z: Calculate true relative distance based on scores ──
-            // Score acts as total distance traveled.
+            // ── Z: Relative motion physics & smooth network distance ──
+            const frameDelta = (typeof delta === 'number' && delta > 0) ? delta : (1 / 60);
+            if (isGameRunning && !isPaused) {
+                // If local player brakes (currentSpeed drops to 0), opponent zooms ahead (-Z) at oppRawSpeed!
+                // If opponent brakes (oppRawSpeed drops to 0), opponent falls backward (+Z) as local drives ahead!
+                const relativeZVelocity = (currentSpeed - oppRawSpeed) * frameDelta * 90;
+                opponentCar.position.z += relativeZVelocity;
+            }
+
+            // Score acts as total true distance traveled:
             const myDistance = score * 0.36;
             const oppDistance = oppNetScore * 0.36;
-            
-            // If opponent distance is greater, they are ahead (negative Z)
             const targetZ = myDistance - oppDistance;
-            
-            // Clamp to keep within visible bounds (-150 to +20)
-            const clampedTargetZ = THREE.MathUtils.clamp(targetZ, -150, 20);
+            const clampedTargetZ = THREE.MathUtils.clamp(targetZ, -180, 25);
 
+            // Smoothly anchor to true network target to eliminate accumulation drift:
             opponentCar.position.z = THREE.MathUtils.lerp(
-                opponentCar.position.z, clampedTargetZ, 0.1
+                opponentCar.position.z, clampedTargetZ, 0.08
             );
-            
+            opponentCar.position.z = THREE.MathUtils.clamp(opponentCar.position.z, -180, 25);
+
             // ── Update 2D Marker Position ──
             const marker = document.getElementById('opponent-marker');
             if (marker && camera) {
-                // Project 3D position to 2D screen coordinates
                 const pos = opponentCar.position.clone();
                 pos.y += 1.5; // Slightly above the car
                 pos.project(camera);
-                
-                // Check if behind camera
+
                 if (pos.z > 1) {
                     marker.style.display = 'none';
                 } else {
                     marker.style.display = 'block';
-                    const x = (pos.x *  .5 + .5) * window.innerWidth;
+                    const x = (pos.x * .5 + .5) * window.innerWidth;
                     const y = (pos.y * -.5 + .5) * window.innerHeight;
                     marker.style.left = `${x}px`;
                     marker.style.top = `${y}px`;
-                    
-                    // Scale marker based on distance
+
                     const dist = Math.abs(opponentCar.position.z);
                     const scale = Math.max(0.3, 1.0 - (dist / 150));
                     marker.style.transform = `translate(-50%, -100%) scale(${scale})`;
@@ -5199,18 +5343,32 @@
         }
 
         // ────────── POSITION SYNC LOOP (~20 Hz) ───────────────────────────────
-        // Sends OUR car's position and score to the opponent.
-        // This ONLY reads from local variables — it never writes to playerCar.
+        let _lastBgSyncTime = performance.now();
         function startPositionSync() {
             if (syncInterval) clearInterval(syncInterval);
+            _lastBgSyncTime = performance.now();
             syncInterval = setInterval(() => {
                 if (!isGameRunning || !conn || !conn.open || !playerCar) return;
+
+                // When this tab is in background (requestAnimationFrame throttled by browser),
+                // advance score and time using real clock delta so the other player sees active driving
+                const now = performance.now();
+                if (document.hidden && !isPaused && currentSpeed > 0) {
+                    const bgDelta = (now - _lastBgSyncTime) / 1000;
+                    if (bgDelta > 0 && bgDelta < 1.0) {
+                        score += currentSpeed * bgDelta * 250;
+                    }
+                }
+                _lastBgSyncTime = now;
+
                 conn.send({
-                    type:  'sync',
-                    x:     Math.round(playerCar.position.x * 100) / 100,
-                    score: Math.floor(score),
-                    speed: Math.floor(currentSpeed * 220),
-                    alive: true
+                    type:        'sync',
+                    x:           Math.round(playerCar.position.x * 100) / 100,
+                    score:       Math.floor(score),
+                    speed:       Math.floor(currentSpeed * 220),
+                    rawSpeed:    currentSpeed,
+                    vehicleType: selectedVehicleType,
+                    alive:       true
                 });
             }, 50);
         }
@@ -5225,8 +5383,8 @@
             envSyncInterval = setInterval(() => {
                 if (!conn || !conn.open) return;
                 conn.send({
-                    type:       'env_sync',
-                    weather:    weatherMode,
+                    type: 'env_sync',
+                    weather: weatherMode,
                     lightState: trafficLightState,
                     lightTimer: trafficLightTimer
                 });
@@ -5247,30 +5405,30 @@
 
         // ────────── SHOW RESULT MODAL ───────────────────────────────────────────
         // outcome: 'winner' | 'loser'
-        window.showMpResult = function(outcome, myScore, oppScore, customSubtitle) {
-            const modal    = document.getElementById('mp-result-modal');
-            const box      = document.getElementById('mpr-box');
-            const trophy   = document.getElementById('mpr-trophy');
-            const title    = document.getElementById('mpr-title');
+        window.showMpResult = function (outcome, myScore, oppScore, customSubtitle) {
+            const modal = document.getElementById('mp-result-modal');
+            const box = document.getElementById('mpr-box');
+            const trophy = document.getElementById('mpr-trophy');
+            const title = document.getElementById('mpr-title');
             const subtitle = document.getElementById('mpr-subtitle');
-            const myEl     = document.getElementById('mpr-my-score');
-            const oppEl    = document.getElementById('mpr-opp-score');
+            const myEl = document.getElementById('mpr-my-score');
+            const oppEl = document.getElementById('mpr-opp-score');
             const leaveBtn = document.getElementById('mpr-leave-btn');
             if (!modal) return;
 
             box.className = 'mpr-box ' + outcome;  // 'winner' or 'loser'
 
             if (outcome === 'winner') {
-                trophy.textContent  = '🏆';
-                title.textContent   = 'YOU WIN!';
+                trophy.textContent = '🏆';
+                title.textContent = 'YOU WIN!';
                 subtitle.textContent = customSubtitle || 'OPPONENT CRASHED';
             } else {
-                trophy.textContent  = '💥';
-                title.textContent   = 'YOU LOSE!';
+                trophy.textContent = '💥';
+                title.textContent = 'YOU LOSE!';
                 subtitle.textContent = customSubtitle || 'YOU CRASHED';
             }
 
-            myEl.textContent  = myScore;
+            myEl.textContent = myScore;
             oppEl.textContent = oppScore;
 
             // Re-trigger animation by cloning the node
@@ -5292,15 +5450,15 @@
             if (!isMultiplayerMode) return;
             isMultiplayerMode = false;
 
-            if (syncInterval)    { clearInterval(syncInterval);    syncInterval    = null; }
+            if (syncInterval) { clearInterval(syncInterval); syncInterval = null; }
             if (envSyncInterval) { clearInterval(envSyncInterval); envSyncInterval = null; }
 
             if (conn && conn.open) {
-                try { conn.send({ type: 'disconnect', alive: false }); } catch(e) {}
-                setTimeout(() => { try { conn.close(); } catch(e) {} }, 150);
+                try { conn.send({ type: 'disconnect', alive: false }); } catch (e) { }
+                setTimeout(() => { try { conn.close(); } catch (e) { } }, 150);
             }
             if (peer) {
-                setTimeout(() => { try { peer.destroy(); peer = null; } catch(e) {} }, 300);
+                setTimeout(() => { try { peer.destroy(); peer = null; } catch (e) { } }, 300);
             }
 
             if (opponentCar) { scene.remove(opponentCar); opponentCar = null; }
@@ -5316,20 +5474,20 @@
             const cd = document.getElementById('mp-countdown');
             if (cd && cd.parentNode) cd.parentNode.removeChild(cd);
 
-            currentRoomCode   = null;
-            myPlayerSlot      = null;
-            opponentAlive      = true;   // reset for next race
-            fallbackTriggered  = false;
+            currentRoomCode = null;
+            myPlayerSlot = null;
+            opponentAlive = true;   // reset for next race
+            fallbackTriggered = false;
             isCountdownRunning = false;
-            _lastMoveDist      = 0;
-            oppNetScore        = 0;
-            oppNetX            = 0;
-            oppPrevX           = 0;
+            _lastMoveDist = 0;
+            oppNetScore = 0;
+            oppNetX = 0;
+            oppPrevX = 0;
         }
 
         // ────────── PATCH gameOver / quitToMainMenu ────────────────────────────
         const _origGameOver = gameOver;
-        window.gameOver = function() {
+        window.gameOver = function () {
             if (isMultiplayerMode) {
                 // Let gameOver() handle the multiplayer crash packet & scorecard
                 _origGameOver();
@@ -5340,7 +5498,7 @@
         };
 
         const _origQuit = quitToMainMenu;
-        window.quitToMainMenu = function() {
+        window.quitToMainMenu = function () {
             cleanupMultiplayer();
             _origQuit();
         };
@@ -5350,8 +5508,8 @@
 
 
 
-    
-</script>
+
+    </script>
 </body>
 
 </html>
