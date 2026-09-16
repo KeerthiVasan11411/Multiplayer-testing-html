@@ -5333,6 +5333,11 @@
         const MAX_TRAFFIC_CARS = 6;
 
         function spawnTraffic() {
+            // In multiplayer mode the CLIENT never spawns its own traffic.
+            // Only the HOST spawns NPCs; the client mirrors them via network.
+            if (typeof isMultiplayerMode !== 'undefined' && isMultiplayerMode &&
+                typeof myPlayerSlot !== 'undefined' && myPlayerSlot === 'client') return;
+
             if (currentSpeed > 0.05 && Math.random() < 0.025 && trafficCars.length < MAX_TRAFFIC_CARS) {
                 const randomLane = laneXPositions[Math.floor(Math.random() * laneXPositions.length)];
                 const spawnZ = -160;
@@ -5373,7 +5378,8 @@
                             speedBoost: 0,
                             cruiseSpeed: 0.09 + Math.random() * 0.07,
                             isYielding: false,
-                            stoppedForLight: false
+                            stoppedForLight: false,
+                            npcType: chosenType   // used for client-side spawning
                         };
 
                         trafficCar.position.set(randomLane, 0, spawnZ);
@@ -6211,6 +6217,12 @@
                 weatherTimer += delta;
             }
 
+            // Host: stamp NPC IDs so client can track them
+            if (typeof isMultiplayerMode !== 'undefined' && isMultiplayerMode &&
+                typeof myPlayerSlot !== 'undefined' && myPlayerSlot === 'host') {
+                _tagTrafficIds();
+            }
+
             if (weatherTimer > 30) {
                 weatherTimer = 0;
                 const nextMode = (weatherMode + 1) % 2;
@@ -6881,6 +6893,16 @@
                     oppSpeedEl.textContent = oppNetSpeed;
 
                     if (!data.alive && isGameRunning) handleOpponentDisconnect();
+
+                    // ── CLIENT: mirror host NPC traffic & road segments ──
+                    if (myPlayerSlot === 'client') {
+                        if (data.npcs) _applyHostNpcs(data.npcs);
+                        if (data.segs) _applyHostSegs(data.segs);
+                        if (data.lightState) {
+                            trafficLightState = data.lightState;
+                            trafficLightTimer = data.lightTimer || trafficLightTimer;
+                        }
+                    }
                 }
 
                 // ── Client ready with vehicle type ──
@@ -7318,7 +7340,7 @@
                 }
                 _lastBgSyncTime = now;
 
-                conn.send({
+                const packet = {
                     type: 'sync',
                     x: Math.round(playerCar.position.x * 100) / 100,
                     score: Math.floor(score),
@@ -7326,8 +7348,91 @@
                     rawSpeed: currentSpeed,
                     vehicleType: selectedVehicleType,
                     alive: true
-                });
+                };
+
+                // ── HOST: broadcast ALL NPC traffic so client mirrors them ──
+                if (myPlayerSlot === 'host') {
+                    packet.npcs = trafficCars.map((car, idx) => ({
+                        id: car.userData.npcId,
+                        t: car.userData.npcType,
+                        x: Math.round(car.position.x * 100) / 100,
+                        z: Math.round(car.position.z * 100) / 100
+                    }));
+                    // Also send road segment offsets (for signal/bridge sync)
+                    packet.segs = roadSegments.map(s => Math.round(s.position.z * 10) / 10);
+                    packet.lightState = trafficLightState;
+                    packet.lightTimer = Math.round(trafficLightTimer * 100) / 100;
+                }
+
+                conn.send(packet);
             }, 50);
+        }
+
+        // ── Assign stable IDs to NPCs when spawned ──
+        let _npcIdCounter = 0;
+        const _clientNpcMeshes = {}; // id → Three.js mesh (client-side only)
+
+        function _ensureNpcId(car) {
+            if (!car.userData.npcId) {
+                car.userData.npcId = ++_npcIdCounter;
+            }
+        }
+
+        // Called inside update() loop after trafficCars are spawned, host-side only
+        function _tagTrafficIds() {
+            trafficCars.forEach(_ensureNpcId);
+        }
+
+        // Client: apply NPC list received from host
+        function _applyHostNpcs(npcs) {
+            if (!Array.isArray(npcs)) return;
+
+            const seenIds = new Set();
+
+            npcs.forEach(npc => {
+                if (!npc.id) return;
+                seenIds.add(npc.id);
+
+                if (_clientNpcMeshes[npc.id]) {
+                    // Update existing ghost NPC position
+                    const mesh = _clientNpcMeshes[npc.id];
+                    mesh.position.x = THREE.MathUtils.lerp(mesh.position.x, npc.x, 0.35);
+                    mesh.position.z = THREE.MathUtils.lerp(mesh.position.z, npc.z, 0.35);
+                } else {
+                    // Spawn new ghost NPC matching the host type
+                    let mesh;
+                    if (npc.t === 'truck') mesh = createTataTruck();
+                    else if (npc.t === 'schoolbus') mesh = createSchoolBus();
+                    else if (npc.t === 'thar') mesh = createMahindraThar();
+                    else if (npc.t === 'bike') mesh = createMotorcycle();
+                    else if (npc.t === 'police') mesh = createPoliceCar();
+                    else mesh = createRealisticCar(0x1e90ff);
+
+                    mesh.userData.npcId = npc.id;
+                    mesh.userData.isClientGhostNpc = true;
+                    mesh.position.set(npc.x, 0, npc.z);
+                    scene.add(mesh);
+                    _clientNpcMeshes[npc.id] = mesh;
+                }
+            });
+
+            // Remove ghost NPCs that are no longer in host's list
+            Object.keys(_clientNpcMeshes).forEach(id => {
+                if (!seenIds.has(parseInt(id))) {
+                    scene.remove(_clientNpcMeshes[id]);
+                    delete _clientNpcMeshes[id];
+                }
+            });
+        }
+
+        // Client: apply road segment Z positions (keeps signals & bridges in sync)
+        function _applyHostSegs(segs) {
+            if (!Array.isArray(segs) || segs.length !== roadSegments.length) return;
+            segs.forEach((z, i) => {
+                roadSegments[i].position.z = THREE.MathUtils.lerp(
+                    roadSegments[i].position.z, z, 0.25
+                );
+            });
         }
 
         // ────────── ENVIRONMENT SYNC LOOP (host only, every 3 s) ──────────────
