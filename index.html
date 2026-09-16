@@ -190,73 +190,426 @@
         #signal-alert.signal-green  { border-color:var(--green);  box-shadow:0 0 28px rgba(0,255,136,0.38); }
         #signal-alert.signal-green  #signal-alert-state { color:var(--green);  text-shadow:0 0 10px rgba(0,255,136,0.7); }
 
-        /* ── Screen Overlay / Main Menu ──────────────────────── */
+        /* ═══════════════════════════════════════════════════════
+           NEXT-GEN COCKPIT RACING LOBBY & SHOWROOM
+           ═══════════════════════════════════════════════════════ */
         #screen-overlay {
-            position:absolute; top:0; left:0; width:100%; height:100%;
-            background:radial-gradient(ellipse at 28% 38%,
-                rgba(0,28,55,0.75) 0%, rgba(2,2,14,0.97) 68%);
-            display:flex; flex-direction:column; justify-content:flex-start;
-            align-items:center; overflow-y:auto; padding:34px 0 42px;
-            gap:18px; z-index:20;
-            backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+            position: fixed; inset: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 55%, rgba(0, 18, 40, 0.15) 0%, rgba(2, 4, 14, 0.88) 100%);
+            display: flex; flex-direction: column; justify-content: space-between;
+            align-items: stretch; overflow: hidden;
+            z-index: 20;
+            pointer-events: auto;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
         }
-        /* Animated perspective grid */
+
+        /* Ambient scanlines & moving cyber grid backdrop */
         #screen-overlay::before {
-            content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+            content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0;
             background-image:
-                linear-gradient(rgba(0,240,255,0.045) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,240,255,0.045) 1px, transparent 1px);
-            background-size:52px 52px;
-            animation:gridMove 22s linear infinite;
+                linear-gradient(rgba(0, 240, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.035) 1px, transparent 1px);
+            background-size: 48px 48px;
+            animation: gridMove 25s linear infinite;
         }
-        @keyframes gridMove {
-            0%  { background-position:0 0; }
-            100%{ background-position:52px 52px; }
-        }
-
-        .modal-content {
-            display:flex; flex-direction:column; align-items:center;
-            gap:18px; max-width:670px; width:92%;
-            margin:auto 0; position:relative; z-index:1;
+        #screen-overlay::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85);
         }
 
-        /* ── Title ───────────────────────────────────────────── */
-        .title-container { text-align:center; position:relative; }
+        /* ── Full Cockpit Lobby Container ─────────────────────── */
+        .lobby-hud-layout {
+            position: relative; z-index: 2; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between;
+            padding: max(14px, env(safe-area-inset-top)) max(22px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(22px, env(safe-area-inset-left));
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+        .lobby-hud-layout * { pointer-events: auto; }
 
-        h1 {
-            font-family:var(--font-r); font-size:46px; font-weight:900;
-            background:linear-gradient(135deg,#00f0ff 0%,#ffffff 42%,#ff0055 100%);
-            background-clip:text; -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent; text-transform:uppercase;
-            letter-spacing:5px;
-            filter:drop-shadow(0 0 24px rgba(0,240,255,0.55));
-            animation:titleFlicker 7s ease-in-out infinite;
+        /* ── TOP HEADER BAR ──────────────────────────────────── */
+        .lobby-header {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; padding: 10px 18px;
+            background: rgba(4, 8, 22, 0.72);
+            border: 1px solid rgba(0, 240, 255, 0.22);
+            border-radius: 14px;
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.08);
         }
-        @keyframes titleFlicker {
-            0%,93%,100%{ filter:drop-shadow(0 0 24px rgba(0,240,255,0.55)); }
-            94%{ filter:drop-shadow(0 0 7px  rgba(0,240,255,0.18)); }
-            95%{ filter:drop-shadow(0 0 24px rgba(0,240,255,0.55)); }
-            97%{ filter:drop-shadow(0 0 5px  rgba(0,240,255,0.12)); }
+        .lobby-branding { display: flex; align-items: baseline; gap: 12px; }
+        .lobby-brand-title {
+            font-family: var(--font-r); font-size: 26px; font-weight: 900;
+            letter-spacing: 4px; text-transform: uppercase;
+            background: linear-gradient(135deg, #00f0ff 0%, #ffffff 50%, #ff0055 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.6));
         }
-        .sub-title {
-            font-family:var(--font-ui); color:#3a5878; font-size:11px;
-            letter-spacing:4.5px; text-transform:uppercase; margin-top:7px; font-weight:700;
+        .lobby-brand-sub {
+            font-family: var(--font-ui); font-size: 11px; font-weight: 700;
+            color: #4e7090; letter-spacing: 2.5px; text-transform: uppercase;
+            display: flex; align-items: center; gap: 6px;
         }
-        p {
-            font-family:var(--font-ui); font-size:13px; color:#7090b0;
-            text-align:center; line-height:1.75;
-            background:rgba(0,240,255,0.03); padding:14px 24px;
-            border-radius:14px; border:1px solid rgba(0,240,255,0.10); width:100%;
+        .badge-live {
+            background: rgba(0, 255, 136, 0.16); color: var(--green);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            padding: 2px 7px; border-radius: 4px; font-size: 9px; font-weight: 800;
+            letter-spacing: 1.5px; text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+            animation: pulse 1.8s infinite;
         }
-        #audio-prompt {
-            font-family:var(--font-ui); color:var(--cyan); font-size:11px;
-            font-weight:700; text-transform:uppercase; letter-spacing:3px;
-            animation:pulse 1.5s infinite;
-        }
-        @keyframes pulse { 0%,100%{opacity:0.25;} 50%{opacity:1;} }
 
-        /* ── Action Buttons ──────────────────────────────────── */
-        .btn-group { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+        /* Center Audio Prompt / Visualizer */
+        .audio-hud-badge {
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.28);
+            border-radius: 20px; padding: 6px 14px;
+            cursor: pointer; transition: all 0.25s ease;
+        }
+        .audio-hud-badge:hover {
+            background: rgba(0, 240, 255, 0.16);
+            box-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
+            transform: scale(1.03);
+        }
+        .audio-text {
+            font-family: var(--font-ui); font-size: 10px; font-weight: 800;
+            color: var(--cyan); letter-spacing: 2px; text-transform: uppercase;
+        }
+        .audio-equalizer { display: flex; align-items: flex-end; gap: 3px; height: 14px; }
+        .audio-equalizer span {
+            width: 3px; height: 100%; background: var(--cyan); border-radius: 2px;
+            animation: eqBounce 1.2s ease-in-out infinite alternate;
+        }
+        .audio-equalizer span:nth-child(1) { animation-duration: 0.6s; height: 40%; }
+        .audio-equalizer span:nth-child(2) { animation-duration: 0.9s; height: 90%; }
+        .audio-equalizer span:nth-child(3) { animation-duration: 0.7s; height: 60%; }
+        .audio-equalizer span:nth-child(4) { animation-duration: 1.1s; height: 80%; }
+        @keyframes eqBounce {
+            0% { transform: scaleY(0.25); }
+            100% { transform: scaleY(1.0); }
+        }
+
+        /* Top Right Actions */
+        .lobby-quick-actions { display: flex; align-items: center; gap: 12px; }
+        .pilot-badge {
+            display: flex; flex-direction: column; align-items: flex-end;
+            font-family: var(--font-ui);
+        }
+        .pilot-label { font-size: 8px; color: #435e7d; font-weight: 800; letter-spacing: 1.5px; }
+        .pilot-callsign {
+            font-family: var(--font-r); font-size: 11px; color: #fff; font-weight: 700;
+            letter-spacing: 2px; text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+        }
+        .lobby-icon-btn {
+            background: rgba(6, 12, 30, 0.85); border: 1px solid rgba(0, 240, 255, 0.35);
+            color: #00f0ff; width: 38px; height: 38px; border-radius: 10px;
+            font-size: 16px; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: all 0.22s ease;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
+        }
+        .lobby-icon-btn:hover {
+            background: rgba(0, 240, 255, 0.2); border-color: #00f0ff;
+            transform: scale(1.08); box-shadow: 0 0 22px rgba(0, 240, 255, 0.5);
+        }
+
+        /* ── MAIN BODY DECKS (Split Floating Layout) ───────────── */
+        .lobby-body-decks {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; flex: 1; margin: 12px 0;
+            position: relative; min-height: 0;
+        }
+
+        /* Center Turntable Holo Indicator */
+        .lobby-showroom-center {
+            position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            pointer-events: none; opacity: 0.75;
+        }
+        .turntable-holo-ring {
+            width: 260px; height: 60px; border-radius: 50%;
+            border: 2px dashed rgba(0, 240, 255, 0.45);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.35), inset 0 0 30px rgba(0, 240, 255, 0.15);
+            animation: holoSpin 20s linear infinite;
+        }
+        @keyframes holoSpin { 0%{transform:rotateX(72deg) rotateZ(0deg);} 100%{transform:rotateX(72deg) rotateZ(360deg);} }
+        .showroom-hint {
+            font-family: var(--font-r); font-size: 9px; font-weight: 700;
+            color: rgba(0, 240, 255, 0.65); letter-spacing: 3px; text-transform: uppercase;
+        }
+
+        /* General Deck Styling */
+        .lobby-deck {
+            width: 325px; max-width: 38vw; max-height: calc(100vh - 140px);
+            background: rgba(3, 7, 20, 0.84);
+            border: 1.5px solid rgba(0, 240, 255, 0.25);
+            border-radius: 18px; padding: 16px 18px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 240, 255, 0.08);
+            display: flex; flex-direction: column; gap: 13px;
+            overflow-y: auto; overflow-x: hidden;
+            position: relative;
+        }
+        .lobby-deck::-webkit-scrollbar { width: 4px; }
+        .lobby-deck::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 2px; }
+
+        .deck-header { border-bottom: 1px solid rgba(0, 240, 255, 0.15); padding-bottom: 8px; }
+        .deck-tag {
+            font-family: var(--font-ui); font-size: 9px; font-weight: 800;
+            color: #426488; letter-spacing: 2.5px; text-transform: uppercase;
+        }
+        .deck-title {
+            font-family: var(--font-r); font-size: 16px; font-weight: 900;
+            color: #fff; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px;
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+        }
+        .deck-sub-label {
+            font-family: var(--font-ui); font-size: 9px; font-weight: 800;
+            color: var(--cyan); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;
+        }
+
+        /* ── LEFT DECK: VEHICLE CARDS ────────────────────────── */
+        .lobby-vehicle-cards { display: flex; gap: 10px; }
+        .vehicle-card {
+            flex: 1; background: rgba(8, 14, 32, 0.85);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; padding: 12px 10px; cursor: pointer;
+            transition: all 0.25s ease; text-align: left;
+            position: relative; overflow: hidden;
+        }
+        .vehicle-card:hover {
+            transform: translateY(-2px); filter: brightness(1.15);
+            border-color: rgba(0, 240, 255, 0.5);
+            box-shadow: 0 0 18px rgba(0, 240, 255, 0.25);
+        }
+        .vehicle-card.active {
+            background: linear-gradient(145deg, rgba(0, 30, 60, 0.95), rgba(4, 12, 28, 0.95));
+            border-color: var(--cyan);
+            box-shadow: 0 0 24px rgba(0, 240, 255, 0.55), inset 0 0 14px rgba(0, 240, 255, 0.15);
+        }
+        .vehicle-card#vehicleCardBike.active {
+            border-color: var(--red);
+            box-shadow: 0 0 24px rgba(255, 0, 85, 0.55), inset 0 0 14px rgba(255, 0, 85, 0.15);
+        }
+        .vcard-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .vcard-icon { font-size: 26px; filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.6)); }
+        .vcard-badge {
+            font-family: var(--font-r); font-size: 8px; font-weight: 800;
+            padding: 2px 6px; border-radius: 4px; letter-spacing: 1px;
+        }
+        .vcard-badge.tier-s {
+            background: rgba(0, 240, 255, 0.2); color: var(--cyan);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+        }
+        .vcard-badge.tier-a {
+            background: rgba(255, 0, 85, 0.2); color: var(--red);
+            border: 1px solid rgba(255, 0, 85, 0.4);
+        }
+        .vcard-name {
+            font-family: var(--font-r); font-size: 12px; font-weight: 800;
+            color: #fff; letter-spacing: 1px;
+        }
+        .vcard-desc {
+            font-family: var(--font-ui); font-size: 9px; color: #537596;
+            margin-top: 3px; font-weight: 600;
+        }
+
+        /* ── CHASSIS PAINT SWATCHES ──────────────────────────── */
+        .color-swatches { display: flex; gap: 10px; align-items: center; }
+        .color-swatch {
+            width: 28px; height: 28px; border-radius: 50%;
+            background: var(--c); border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer; transition: all 0.22s ease;
+            box-shadow: 0 0 10px var(--c);
+        }
+        .color-swatch:hover {
+            transform: scale(1.22); filter: brightness(1.2);
+            box-shadow: 0 0 20px var(--c);
+        }
+        .color-swatch.active {
+            border: 3px solid #fff; transform: scale(1.18);
+            box-shadow: 0 0 24px var(--c), 0 0 4px #fff;
+        }
+
+        /* ── PERFORMANCE MATRIX BARS ─────────────────────────── */
+        .vehicle-specs-matrix { display: flex; flex-direction: column; gap: 7px; }
+        .stat-row { display: flex; flex-direction: column; gap: 3px; }
+        .stat-meta { display: flex; justify-content: space-between; align-items: center; }
+        .stat-name {
+            font-family: var(--font-ui); font-size: 9px; font-weight: 800;
+            color: #6885a5; letter-spacing: 1.5px;
+        }
+        .stat-num {
+            font-family: var(--font-r); font-size: 10px; font-weight: 800;
+            color: var(--cyan); letter-spacing: 1px;
+        }
+        .stat-track {
+            width: 100%; height: 7px; background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px; overflow: hidden; box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6);
+        }
+        .stat-bar-inner {
+            height: 100%; background: linear-gradient(90deg, #0099ff, #00f0ff);
+            border-radius: 4px; transition: width 0.35s ease;
+            position: relative; overflow: hidden;
+        }
+        .stat-bar-inner.agility { background: linear-gradient(90deg, #ff5500, #ff0055); }
+        .stat-bar-inner.accel   { background: linear-gradient(90deg, #00f0ff, #00ff88); }
+        .stat-bar-inner::after {
+            content: ''; position: absolute; top: 0; left: -60%; width: 45%; height: 100%;
+            background: rgba(255, 255, 255, 0.35);
+            animation: barShimmer 2.5s ease-in-out infinite;
+        }
+
+        /* Vehicle Perk Chip */
+        .perk-chip {
+            display: flex; gap: 8px; align-items: flex-start;
+            background: rgba(0, 240, 255, 0.04);
+            border: 1px dashed rgba(0, 240, 255, 0.22);
+            border-radius: 10px; padding: 8px 10px; font-size: 9.5px;
+            color: #7b9bbd; line-height: 1.45;
+        }
+        .perk-chip strong { color: var(--cyan); }
+
+        /* ── RIGHT DECK: MISSION DEPLOYMENT ───────────────────── */
+        .hero-launch-btn {
+            width: 100%; padding: 18px 16px;
+            background: linear-gradient(135deg, #00f0ff 0%, #0066ff 65%, #6600ff 100%);
+            border: none; border-radius: 14px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.25s ease; position: relative; overflow: hidden;
+        }
+        .hero-launch-btn:hover {
+            transform: translateY(-3px) scale(1.02); filter: brightness(1.15);
+            box-shadow: 0 0 50px rgba(0, 240, 255, 0.85);
+        }
+        .hero-launch-btn::before {
+            content: ''; position: absolute; top: -60%; left: -60%; width: 50%; height: 220%;
+            background: rgba(255, 255, 255, 0.25); transform: skewX(-25deg);
+            animation: heroShine 4s infinite;
+        }
+        @keyframes heroShine { 0%{left:-70%;} 30%{left:140%;} 100%{left:140%;} }
+        .btn-inner { display: flex; flex-direction: column; text-align: left; }
+        .btn-subtext {
+            font-family: var(--font-ui); font-size: 8.5px; font-weight: 800;
+            color: rgba(2, 8, 22, 0.75); letter-spacing: 2px; text-transform: uppercase;
+        }
+        .btn-maintext {
+            font-family: var(--font-r); font-size: 18px; font-weight: 900;
+            color: #020816; letter-spacing: 2.5px; text-transform: uppercase;
+        }
+        .btn-arrow {
+            font-size: 20px; color: #020816; font-weight: 900;
+            transition: transform 0.2s;
+        }
+        .hero-launch-btn:hover .btn-arrow { transform: translateX(4px); }
+
+        /* Multiplayer Mode Card */
+        .lobby-mode-card {
+            background: rgba(18, 10, 32, 0.85);
+            border: 1.5px solid rgba(176, 38, 255, 0.38);
+            border-radius: 12px; padding: 12px 14px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 20px rgba(176, 38, 255, 0.15);
+        }
+        .lobby-mode-card:hover {
+            border-color: #d844ff; transform: translateY(-2px);
+            background: rgba(30, 14, 52, 0.95);
+            box-shadow: 0 0 30px rgba(176, 38, 255, 0.45);
+        }
+        .lmc-left { display: flex; flex-direction: column; text-align: left; }
+        .lmc-badge {
+            font-family: var(--font-r); font-size: 8px; font-weight: 800;
+            color: #d844ff; letter-spacing: 1.5px; text-transform: uppercase;
+        }
+        .lmc-title {
+            font-family: var(--font-r); font-size: 13px; font-weight: 800;
+            color: #fff; letter-spacing: 1.5px; margin-top: 2px;
+        }
+        .lmc-desc {
+            font-family: var(--font-ui); font-size: 9px; color: #7f6d99;
+            margin-top: 2px; font-weight: 600;
+        }
+        .lmc-arrow { font-size: 18px; color: #d844ff; font-weight: 900; }
+
+        /* Keybinds Cheatsheet */
+        .controls-cheatsheet { display: flex; flex-direction: column; gap: 6px; }
+        .keys-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+        .key-pill {
+            display: flex; align-items: center; gap: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px; padding: 4px 7px;
+            font-family: var(--font-ui); font-size: 8.5px; color: #8fa7c4; font-weight: 700;
+        }
+        .key-pill kbd {
+            background: rgba(0, 240, 255, 0.15); border: 1px solid rgba(0, 240, 255, 0.4);
+            color: var(--cyan); border-radius: 4px; padding: 1px 4px;
+            font-family: var(--font-r); font-size: 9px; font-weight: 800;
+        }
+
+        /* Mobile Touch Controls Switch */
+        .touch-toggle-card {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0, 240, 255, 0.04);
+            border: 1px solid rgba(0, 240, 255, 0.18);
+            border-radius: 10px; padding: 8px 12px;
+        }
+        .touch-label {
+            font-family: var(--font-ui); font-size: 9.5px; font-weight: 800;
+            color: #7da0c5; letter-spacing: 1px;
+        }
+        .cyber-switch {
+            position: relative; width: 38px; height: 20px; display: inline-block; cursor: pointer;
+        }
+        .cyber-switch input { opacity: 0; width: 0; height: 0; }
+        .switch-slider {
+            position: absolute; inset: 0; background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px; transition: 0.25s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .switch-slider::before {
+            content: ''; position: absolute; height: 14px; width: 14px;
+            left: 2px; bottom: 2px; background: #fff; border-radius: 50%;
+            transition: 0.25s; box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+        }
+        .cyber-switch input:checked + .switch-slider {
+            background: var(--cyan);
+            border-color: #00f0ff;
+            box-shadow: 0 0 14px rgba(0, 240, 255, 0.5);
+        }
+        .cyber-switch input:checked + .switch-slider::before {
+            transform: translateX(18px); background: #020b18;
+        }
+
+        /* ── BOTTOM FOOTER BAR ───────────────────────────────── */
+        .lobby-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            width: 100%; padding: 6px 14px;
+            font-family: var(--font-ui); font-size: 9.5px; font-weight: 700;
+            color: #3b5a7a; letter-spacing: 2px; text-transform: uppercase;
+        }
+        .footer-status { display: flex; align-items: center; gap: 6px; color: var(--green); }
+        .status-dot {
+            width: 6px; height: 6px; background: var(--green); border-radius: 50%;
+            box-shadow: 0 0 8px var(--green);
+        }
+
+        /* ── DEDICATED PAUSE & CRASH OVERLAYS ─────────────────── */
+        .pause-crash-card {
+            background: rgba(4, 7, 20, 0.94);
+            border: 2px solid rgba(0, 240, 255, 0.4);
+            border-radius: 22px; padding: 28px 36px;
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            box-shadow: 0 0 60px rgba(0, 240, 255, 0.25);
+            display: flex; flex-direction: column; align-items: center; gap: 16px;
+            text-align: center; max-width: 440px; width: 90%;
+            margin: auto; position: relative; z-index: 10;
+        }
+        .pause-crash-card.crashed {
+            border-color: var(--red);
+            box-shadow: 0 0 60px rgba(255, 0, 85, 0.35);
+        }
 
         .action-btn {
             font-family:var(--font-r);
@@ -268,58 +621,34 @@
             text-transform:uppercase; letter-spacing:2px;
             position:relative; overflow:hidden;
         }
-        .action-btn::after {
-            content:''; position:absolute;
-            top:-60%; left:-55%; width:35%; height:220%;
-            background:rgba(255,255,255,0.13);
-            transform:skewX(-22deg);
-            transition:left 0.55s ease;
-        }
-        .action-btn:hover::after { left:125%; }
+        .action-btn:hover { transform:translateY(-3px) scale(1.05); filter:brightness(1.18); }
         .action-btn.secondary {
             background:linear-gradient(135deg,#008aaa 0%,#0055cc 50%,#0099ff 100%);
             border-color:rgba(0,200,255,0.50);
             box-shadow:0 0 26px rgba(0,180,255,0.48), inset 0 1px 0 rgba(255,255,255,0.14);
         }
-        .action-btn:hover { transform:translateY(-3px) scale(1.05); filter:brightness(1.18); }
-
         .hidden { display:none !important; }
 
-        /* ── Vehicle Lobby ───────────────────────────────────── */
-        #vehicleLobbyContainer {
-            width:100%; position:relative; overflow:hidden;
-            background:rgba(3,8,22,0.92) !important;
-            border:1.5px solid rgba(0,240,255,0.32) !important;
-            border-radius:18px !important;
-            padding:20px !important;
-            box-shadow:inset 0 0 32px rgba(0,240,255,0.06),
-                       0 0 30px rgba(0,240,255,0.10) !important;
+        .modal-content {
+            display:flex; flex-direction:column; align-items:center;
+            gap:18px; max-width:670px; width:92%;
+            margin:auto 0; position:relative; z-index:1;
         }
-        /* Top shimmer line animation */
-        #vehicleLobbyContainer::before {
-            content:''; position:absolute; top:0; left:-100%;
-            width:55%; height:2px;
-            background:linear-gradient(90deg,transparent,#00f0ff,transparent);
-            animation:topShimmer 3.5s ease-in-out infinite;
-        }
-        @keyframes topShimmer { 0%{left:-55%;} 100%{left:160%;} }
 
-        .vehicle-card { transition:all 0.30s ease !important; cursor:pointer; }
-        .vehicle-card:hover { transform:translateY(-4px) scale(1.02) !important; filter:brightness(1.12); }
-        .vehicle-card.active { box-shadow:0 0 24px rgba(0,240,255,0.65) !important; }
-
-        /* Stat bar shimmer */
-        .stat-bar-inner {
-            position:relative; overflow:hidden; height:100% !important;
-            border-radius:5px !important;
+        /* Responsive adaptation for mobile / narrow displays */
+        @media (max-width: 860px) {
+            .lobby-header { flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
+            .lobby-brand-title { font-size: 18px; }
+            .lobby-body-decks {
+                flex-direction: column; align-items: stretch; justify-content: flex-end;
+                gap: 10px; overflow-y: auto; pointer-events: auto;
+            }
+            .lobby-deck {
+                width: 100%; max-width: 100%; max-height: none;
+                padding: 12px 14px;
+            }
+            .lobby-showroom-center { display: none; }
         }
-        .stat-bar-inner::after {
-            content:''; position:absolute;
-            top:0; left:-70%; width:50%; height:100%;
-            background:rgba(255,255,255,0.28);
-            animation:barShimmer 2.8s ease-in-out infinite;
-        }
-        @keyframes barShimmer { 0%{left:-55%;} 100%{left:160%;} }
 
         /* ── Multiplayer Room Modal ───────────────────────────── */
         #mp-room-modal {
@@ -814,82 +1143,185 @@
 
     <!-- Screen Overlay / Menus -->
     <div id="screen-overlay">
-        <div class="modal-content" id="mainMenuModal">
-            <div class="title-container">
-                <h1 id="screenTitle">CYBER RACER 3D</h1>
-                <div class="sub-title">Highway Signals Edition</div>
-            </div>
-            <div id="audio-prompt">🎵 Click Anywhere to Enable Audio 🎵</div>
-            <p id="screenText">
-                Highway racing with standalone traffic signals, traffic, bridges, weather, and immersive controls.
-            </p>
+        <!-- ── LOBBY COCKPIT INTERFACE ────────────────────────────── -->
+        <div id="mainMenuModal" class="lobby-hud-layout">
+            <!-- 1. TOP HEADER HUD BAR -->
+            <header class="lobby-header">
+                <div class="lobby-branding">
+                    <h1 class="lobby-brand-title" id="screenTitle">CYBER RACER 3D</h1>
+                    <div class="lobby-brand-sub"><span class="badge-live">ONLINE</span> // HIGHWAY SIGNALS EDITION</div>
+                </div>
+                <div class="lobby-center-hud">
+                    <div id="audio-prompt" class="audio-hud-badge" title="Click to Enable Engine & Music Audio">
+                        <span class="audio-icon">🎵</span>
+                        <span class="audio-text">AUDIO READY</span>
+                        <div class="audio-equalizer">
+                            <span></span><span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="lobby-quick-actions">
+                    <div class="pilot-badge">
+                        <span class="pilot-label">PILOT LINK</span>
+                        <span class="pilot-callsign">CYBER-01</span>
+                    </div>
+                    <button class="lobby-icon-btn" id="menuSettingsBtn" title="Settings">⚙</button>
+                    <button class="lobby-icon-btn" id="fullscreenBtn" title="Toggle Fullscreen">⛶</button>
+                </div>
+            </header>
 
-            <!-- Expanded 3D Garage Lobby Selector -->
-            <div id="vehicleLobbyContainer"
-                style="margin: 16px 0; background: rgba(5, 12, 28, 0.85); border: 2px solid rgba(0, 240, 255, 0.4); border-radius: 14px; padding: 16px; box-shadow: inset 0 0 25px rgba(0, 240, 255, 0.2), 0 0 20px rgba(0, 240, 255, 0.15);">
-                <div
-                    style="color: #00f0ff; font-weight: 900; font-size: 14px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 12px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);">
-                    🏎️ 3D GARAGE LOBBY - CHOOSE YOUR RIDE 🏍️
-                </div>
-                <div
-                    style="display: flex; gap: 14px; justify-content: center; align-items: stretch; margin-bottom: 14px;">
-                    <div class="vehicle-card active" id="vehicleCardCar"
-                        style="flex: 1; background: rgba(10, 25, 55, 0.95); border: 2px solid #00f0ff; border-radius: 12px; padding: 14px 10px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 16px rgba(0,240,255,0.5); text-align: center;">
-                        <div style="font-size: 38px; margin-bottom: 6px; filter: drop-shadow(0 0 8px #00f0ff);">🏎️
-                        </div>
-                        <div style="color: #fff; font-weight: 900; font-size: 15px; letter-spacing: 1px;">CYBER HYPERCAR
-                        </div>
-                        <div style="color: #00f0ff; font-size: 11px; margin-top: 4px; font-weight: 700;">V10 TWIN TURBO
-                            • AERO SHIELD</div>
+            <!-- 2. MAIN COCKPIT VIEWPORT (Center 3D Showroom + Left & Right Floating HUD Decks) -->
+            <div class="lobby-body-decks">
+                <!-- LEFT DECK: VEHICLE GARAGE & TELEMETRY -->
+                <aside class="lobby-deck deck-left" id="vehicleLobbyContainer">
+                    <div class="deck-header">
+                        <div class="deck-tag">GARAGE SHOWROOM</div>
+                        <div class="deck-title">CHOOSE YOUR RIDE</div>
                     </div>
-                    <div class="vehicle-card" id="vehicleCardBike"
-                        style="flex: 1; background: rgba(20, 10, 30, 0.7); border: 2px solid rgba(255, 0, 85, 0.3); border-radius: 12px; padding: 14px 10px; cursor: pointer; transition: all 0.3s ease; text-align: center;">
-                        <div style="font-size: 38px; margin-bottom: 6px; filter: drop-shadow(0 0 8px #ff0055);">🏍️
+
+                    <!-- Vehicle Switcher Cards -->
+                    <div class="lobby-vehicle-cards">
+                        <div class="vehicle-card active" id="vehicleCardCar">
+                            <div class="vcard-top">
+                                <span class="vcard-badge tier-s">TIER S</span>
+                                <span class="vcard-icon">🏎️</span>
+                            </div>
+                            <div class="vcard-name">CYBER HYPERCAR</div>
+                            <div class="vcard-desc">TWIN-TURBO V10 • AERO SHIELD</div>
                         </div>
-                        <div style="color: #fff; font-weight: 900; font-size: 15px; letter-spacing: 1px;">CYBER
-                            SUPERBIKE</div>
-                        <div style="color: #ff0055; font-size: 11px; margin-top: 4px; font-weight: 700;">1200CC INLINE-4
-                            • MAX LEAN</div>
+                        <div class="vehicle-card" id="vehicleCardBike">
+                            <div class="vcard-top">
+                                <span class="vcard-badge tier-a">HYPERBIKE</span>
+                                <span class="vcard-icon">🏍️</span>
+                            </div>
+                            <div class="vcard-name">CYBER SUPERBIKE</div>
+                            <div class="vcard-desc">1200CC INLINE-4 • MAX LEAN</div>
+                        </div>
                     </div>
-                </div>
-                <!-- Vehicle Stats -->
-                <div
-                    style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; text-align: left; background: rgba(0, 5, 18, 0.75); padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(0, 240, 255, 0.2);">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #00f0ff; font-weight: 800; letter-spacing: 1px;">TOP SPEED:</span>
-                        <div
-                            style="width: 60%; background: rgba(255,255,255,0.1); height: 9px; border-radius: 5px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.5);">
-                            <div id="statSpeed"
-                                style="width: 85%; background: linear-gradient(90deg, #00f0ff, #0077ff); height: 100%; transition: width 0.35s ease;">
+
+                    <!-- Interactive Paint Palette & Underglow Selector -->
+                    <div class="paint-selector-section">
+                        <div class="deck-sub-label">CHASSIS PAINT & UNDERGLOW</div>
+                        <div class="color-swatches" id="colorSwatches">
+                            <button class="color-swatch active" data-color="0x00f0ff" style="--c:#00f0ff;" title="Cyber Cyan"></button>
+                            <button class="color-swatch" data-color="0xff0055" style="--c:#ff0055;" title="Neon Crimson"></button>
+                            <button class="color-swatch" data-color="0x00ff88" style="--c:#00ff88;" title="Acid Green"></button>
+                            <button class="color-swatch" data-color="0xffd23f" style="--c:#ffd23f;" title="Electric Gold"></button>
+                            <button class="color-swatch" data-color="0xb026ff" style="--c:#b026ff;" title="Plasma Violet"></button>
+                        </div>
+                    </div>
+
+                    <!-- Live Specs Telemetry Bars -->
+                    <div class="vehicle-specs-matrix">
+                        <div class="deck-sub-label">PERFORMANCE TELEMETRY</div>
+                        <div class="stat-row">
+                            <div class="stat-meta">
+                                <span class="stat-name">TOP SPEED</span>
+                                <span class="stat-num" id="statSpeedVal">280 KM/H</span>
+                            </div>
+                            <div class="stat-track">
+                                <div id="statSpeed" class="stat-bar-inner" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-meta">
+                                <span class="stat-name">AGILITY & LEAN</span>
+                                <span class="stat-num" id="statAgilityVal">65%</span>
+                            </div>
+                            <div class="stat-track">
+                                <div id="statAgility" class="stat-bar-inner agility" style="width: 65%;"></div>
+                            </div>
+                        </div>
+                        <div class="stat-row">
+                            <div class="stat-meta">
+                                <span class="stat-name">ACCELERATION</span>
+                                <span class="stat-num" id="statAccelVal">75%</span>
+                            </div>
+                            <div class="stat-track">
+                                <div id="statAccel" class="stat-bar-inner accel" style="width: 75%;"></div>
                             </div>
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #ff0055; font-weight: 800; letter-spacing: 1px;">AGILITY & LEAN:</span>
-                        <div
-                            style="width: 60%; background: rgba(255,255,255,0.1); height: 9px; border-radius: 5px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.5);">
-                            <div id="statAgility"
-                                style="width: 65%; background: linear-gradient(90deg, #ff0055, #ff5500); height: 100%; transition: width 0.35s ease;">
-                            </div>
+
+                    <!-- Vehicle Perk Chip -->
+                    <div class="perk-chip" id="vehiclePerkChip">
+                        <span class="perk-icon">🛡️</span>
+                        <div class="perk-text" id="vehiclePerkText">
+                            <strong>AERO SHIELD ACTIVE</strong>: Heavy body provides high downforce & collision stability.
                         </div>
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="color: #00ffaa; font-weight: 800; letter-spacing: 1px;">ACCELERATION:</span>
-                        <div
-                            style="width: 60%; background: rgba(255,255,255,0.1); height: 9px; border-radius: 5px; overflow: hidden; box-shadow: inset 0 0 5px rgba(0,0,0,0.5);">
-                            <div id="statAccel"
-                                style="width: 75%; background: linear-gradient(90deg, #00ffaa, #00f0ff); height: 100%; transition: width 0.35s ease;">
-                            </div>
-                        </div>
-                    </div>
+                </aside>
+
+                <!-- CENTER TURNTABLE SHOWROOM (Open space where 3D rotating vehicle shines) -->
+                <div class="lobby-showroom-center">
+                    <div class="turntable-holo-ring"></div>
+                    <div class="showroom-hint">360° SHOWROOM DISPLAY</div>
                 </div>
+
+                <!-- RIGHT DECK: MISSION DEPLOYMENT & MODES -->
+                <aside class="lobby-deck deck-right">
+                    <div class="deck-header">
+                        <div class="deck-tag">FLIGHT DECK</div>
+                        <div class="deck-title">DEPLOY MISSION</div>
+                    </div>
+
+                    <!-- Primary Hero Launch Action -->
+                    <button class="hero-launch-btn" id="startBtn">
+                        <div class="btn-inner">
+                            <span class="btn-subtext">SYSTEMS READY</span>
+                            <span class="btn-maintext">START ENGINE</span>
+                        </div>
+                        <span class="btn-arrow">▶</span>
+                    </button>
+
+                    <!-- Multiplayer Quick Link -->
+                    <div class="lobby-mode-card" id="multiplayerBtn">
+                        <div class="lmc-left">
+                            <div class="lmc-badge">1v1 ONLINE</div>
+                            <div class="lmc-title">⚡ MULTIPLAYER BATTLE</div>
+                            <div class="lmc-desc">Race a friend in real-time via WebRTC room code</div>
+                        </div>
+                        <div class="lmc-arrow">→</div>
+                    </div>
+
+                    <!-- Flight Controls Reference -->
+                    <div class="controls-cheatsheet">
+                        <div class="deck-sub-label">PILOT CONTROLS</div>
+                        <div class="keys-grid">
+                            <div class="key-pill"><kbd>W</kbd> <span>ACCEL</span></div>
+                            <div class="key-pill"><kbd>A</kbd><kbd>D</kbd> <span>STEER</span></div>
+                            <div class="key-pill"><kbd>S</kbd> <span>BRAKE</span></div>
+                            <div class="key-pill"><kbd>SHIFT</kbd> <span>BOOST</span></div>
+                            <div class="key-pill"><kbd>SPACE</kbd> <span>HORN</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Touch Assist Toggle -->
+                    <div class="touch-toggle-card">
+                        <span class="touch-label">📱 ON-SCREEN TOUCH BUTTONS</span>
+                        <label class="cyber-switch">
+                            <input type="checkbox" id="lobbyToggleTouch">
+                            <span class="switch-slider"></span>
+                        </label>
+                    </div>
+                </aside>
             </div>
-            <div class="btn-group">
-                <button class="action-btn" id="startBtn">START ENGINE</button>
-                <button class="action-btn secondary" id="multiplayerBtn"
-                    style="background: linear-gradient(135deg,#00f0ff 0%,#0077ff 100%); box-shadow: 0 0 25px rgba(0,240,255,0.45);">⚡
-                    MULTIPLAYER</button>
-                <button class="action-btn secondary" id="menuSettingsBtn">SETTINGS</button>
+
+            <!-- 3. BOTTOM FOOTER TELEMETRY -->
+            <footer class="lobby-footer">
+                <div class="footer-notice" id="screenText">HIGHWAY TRAFFIC SIGNALS • 10M RED LIGHT STOP PROTOCOL • DYNAMIC WEATHER</div>
+                <div class="footer-status"><span class="status-dot"></span> NEURAL LINK ACTIVE • 60 FPS</div>
+            </footer>
+        </div>
+
+        <!-- 4. DEDICATED PAUSE & CRASH MODAL -->
+        <div id="pauseCrashModal" class="pause-crash-card hidden">
+            <h2 id="pauseCrashTitle" style="font-family:var(--font-r); font-size:26px; color:var(--cyan); letter-spacing:3px; text-transform:uppercase;">SYSTEM PAUSED</h2>
+            <div id="pauseCrashText" style="font-family:var(--font-ui); font-size:13px; color:#8fa7c4; line-height:1.6;">Telemetry and physics on standby.</div>
+            <div class="btn-group" style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:8px;">
+                <button class="action-btn" id="pauseResumeBtn" style="min-width:160px;">RESUME RACE</button>
+                <button class="action-btn secondary" id="pauseSettingsBtn">SETTINGS</button>
+                <button class="action-btn secondary" id="pauseQuitBtn" style="background:linear-gradient(135deg,#ff0055 0%,#aa0022 100%); border-color:var(--red);">MAIN LOBBY</button>
             </div>
         </div>
 
@@ -2170,14 +2602,19 @@
             return group;
         }
 
-        function spawnSelectedPlayerVehicle() {
+        let playerCustomColor = null;
+        function spawnSelectedPlayerVehicle(colorOverride) {
+            if (colorOverride !== undefined) {
+                playerCustomColor = colorOverride;
+            }
             if (playerCar) {
                 scene.remove(playerCar);
             }
+            const activeColor = (playerCustomColor !== null) ? playerCustomColor : (selectedVehicleType === 'bike' ? 0x00f0ff : 0xff0055);
             if (selectedVehicleType === 'bike') {
-                playerCar = createRealisticBike(0x00f0ff, true);
+                playerCar = createRealisticBike(activeColor, true);
             } else {
-                playerCar = createRealisticCar(0xff0055, true);
+                playerCar = createRealisticCar(activeColor, true);
             }
             playerCar.position.set(0, 0, 0);
             scene.add(playerCar);
@@ -3808,20 +4245,28 @@
             const statSpeed = document.getElementById('statSpeed');
             const statAgility = document.getElementById('statAgility');
             const statAccel = document.getElementById('statAccel');
+            const statSpeedVal = document.getElementById('statSpeedVal');
+            const statAgilityVal = document.getElementById('statAgilityVal');
+            const statAccelVal = document.getElementById('statAccelVal');
+            const vehiclePerkText = document.getElementById('vehiclePerkText');
 
             if (vehicleCardCar && vehicleCardBike) {
                 vehicleCardCar.addEventListener('click', () => {
                     selectedVehicleType = 'car';
                     vehicleCardCar.classList.add('active');
-                    vehicleCardCar.style.border = '2px solid #00f0ff';
-                    vehicleCardCar.style.boxShadow = '0 0 12px rgba(0,240,255,0.4)';
+                    vehicleCardCar.style.borderColor = '#00f0ff';
                     vehicleCardBike.classList.remove('active');
-                    vehicleCardBike.style.border = '1px solid rgba(255,0,85,0.3)';
-                    vehicleCardBike.style.boxShadow = 'none';
+                    vehicleCardBike.style.borderColor = 'rgba(255,255,255,0.1)';
 
-                    statSpeed.style.width = '85%';
-                    statAgility.style.width = '65%';
-                    statAccel.style.width = '75%';
+                    if (statSpeed) statSpeed.style.width = '85%';
+                    if (statAgility) statAgility.style.width = '65%';
+                    if (statAccel) statAccel.style.width = '75%';
+                    if (statSpeedVal) statSpeedVal.innerText = '280 KM/H';
+                    if (statAgilityVal) statAgilityVal.innerText = '65%';
+                    if (statAccelVal) statAccelVal.innerText = '75%';
+                    if (vehiclePerkText) {
+                        vehiclePerkText.innerHTML = '<strong>AERO SHIELD ACTIVE</strong>: Heavy body provides high downforce & collision stability.';
+                    }
 
                     spawnSelectedPlayerVehicle();
                 });
@@ -3829,17 +4274,99 @@
                 vehicleCardBike.addEventListener('click', () => {
                     selectedVehicleType = 'bike';
                     vehicleCardBike.classList.add('active');
-                    vehicleCardBike.style.border = '2px solid #ff0055';
-                    vehicleCardBike.style.boxShadow = '0 0 12px rgba(255,0,85,0.5)';
+                    vehicleCardBike.style.borderColor = '#ff0055';
                     vehicleCardCar.classList.remove('active');
-                    vehicleCardCar.style.border = '1px solid rgba(0,240,255,0.3)';
-                    vehicleCardCar.style.boxShadow = 'none';
+                    vehicleCardCar.style.borderColor = 'rgba(255,255,255,0.1)';
 
-                    statSpeed.style.width = '98%';
-                    statAgility.style.width = '95%';
-                    statAccel.style.width = '90%';
+                    if (statSpeed) statSpeed.style.width = '98%';
+                    if (statAgility) statAgility.style.width = '95%';
+                    if (statAccel) statAccel.style.width = '90%';
+                    if (statSpeedVal) statSpeedVal.innerText = '320 KM/H';
+                    if (statAgilityVal) statAgilityVal.innerText = '95%';
+                    if (statAccelVal) statAccelVal.innerText = '90%';
+                    if (vehiclePerkText) {
+                        vehiclePerkText.innerHTML = '<strong>HYPER AGILITY ACTIVE</strong>: Maximum lean angle & razor-sharp traffic slalom.';
+                    }
 
                     spawnSelectedPlayerVehicle();
+                });
+            }
+
+            // Chassis Paint & Underglow Swatches
+            document.querySelectorAll('.color-swatch').forEach(swatch => {
+                swatch.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+                    swatch.classList.add('active');
+                    const colorVal = parseInt(swatch.getAttribute('data-color'), 16);
+                    spawnSelectedPlayerVehicle(colorVal);
+                });
+            });
+
+            // Sync Mobile Touch Assist Toggle in Lobby
+            const lobbyToggleTouch = document.getElementById('lobbyToggleTouch');
+            if (lobbyToggleTouch && toggleTouch) {
+                lobbyToggleTouch.addEventListener('change', (e) => {
+                    toggleTouch.checked = e.target.checked;
+                    toggleTouch.dispatchEvent(new Event('change'));
+                });
+                toggleTouch.addEventListener('change', (e) => {
+                    lobbyToggleTouch.checked = e.target.checked;
+                });
+            }
+
+            // Fullscreen Toggle Button
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            if (fullscreenBtn) {
+                fullscreenBtn.addEventListener('click', () => {
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen().catch(() => {});
+                    } else {
+                        document.exitFullscreen().catch(() => {});
+                    }
+                });
+            }
+
+            // Audio Prompt Click Handler
+            const audioPromptEl = document.getElementById('audio-prompt');
+            if (audioPromptEl) {
+                audioPromptEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    initAudio();
+                    startLobbyMusic();
+                    audioPromptEl.innerHTML = '<span class="audio-icon">🔊</span><span class="audio-text">AUDIO ACTIVE</span><div class="audio-equalizer"><span></span><span></span><span></span><span></span></div>';
+                });
+            }
+
+            // Dedicated Pause / Crash Modal Listeners
+            const pauseCrashModal = document.getElementById('pauseCrashModal');
+            const pauseCrashTitle = document.getElementById('pauseCrashTitle');
+            const pauseCrashText = document.getElementById('pauseCrashText');
+            const pauseResumeBtn = document.getElementById('pauseResumeBtn');
+            const pauseSettingsBtn = document.getElementById('pauseSettingsBtn');
+            const pauseQuitBtn = document.getElementById('pauseQuitBtn');
+
+            if (pauseResumeBtn) {
+                pauseResumeBtn.addEventListener('click', () => {
+                    pauseCrashModal.classList.add('hidden');
+                    screenOverlay.classList.add('hidden');
+                    if (isGameRunning && isPaused) {
+                        resumeGame();
+                    } else {
+                        startGame();
+                    }
+                });
+            }
+            if (pauseSettingsBtn) {
+                pauseSettingsBtn.addEventListener('click', () => {
+                    pauseCrashModal.classList.add('hidden');
+                    settingsModal.classList.remove('hidden');
+                });
+            }
+            if (pauseQuitBtn) {
+                pauseQuitBtn.addEventListener('click', () => {
+                    pauseCrashModal.classList.add('hidden');
+                    quitToMainMenu();
                 });
             }
 
@@ -3923,10 +4450,14 @@
                 if (!isGameRunning) return;
                 if (!isPaused) {
                     pauseGame();
-                    screenTitle.innerText = "GAME PAUSED";
-                    screenText.innerHTML = "Game is currently paused.";
-                    startBtn.innerText = "RESUME GAME";
-                    mainMenuModal.classList.remove('hidden');
+                    mainMenuModal.classList.add('hidden');
+                    if (pauseCrashModal) {
+                        pauseCrashModal.classList.remove('hidden');
+                        pauseCrashModal.classList.remove('crashed');
+                        pauseCrashTitle.innerText = "SYSTEM PAUSED";
+                        pauseCrashText.innerHTML = "Telemetry and physics on standby.";
+                        pauseResumeBtn.innerText = "RESUME RACE";
+                    }
                     settingsModal.classList.add('hidden');
                     screenOverlay.classList.remove('hidden');
                 } else {
@@ -4094,9 +4625,7 @@
             stopRainSound();
             startLobbyMusic();
 
-            screenTitle.innerText = "CYBER RACER 3D";
-            screenText.innerHTML = "Highway racing with standalone traffic signals, traffic, bridges, trees, weather, and immersive controls.";
-            startBtn.innerText = "START ENGINE";
+            if (pauseCrashModal) pauseCrashModal.classList.add('hidden');
             settingsModal.classList.add('hidden');
             mainMenuModal.classList.remove('hidden');
             screenOverlay.classList.remove('hidden');
@@ -4133,10 +4662,14 @@
                 startLobbyMusic();
             }, 600);
 
-            screenTitle.innerText = "CRASHED!";
-            screenText.innerHTML = `Survival Time: <strong>${Math.floor(gameTime)}s</strong><br>Final Score: <strong>${Math.floor(score)}</strong>`;
-            startBtn.innerText = "RESTART RACE";
-            mainMenuModal.classList.remove('hidden');
+            mainMenuModal.classList.add('hidden');
+            if (pauseCrashModal) {
+                pauseCrashModal.classList.remove('hidden');
+                pauseCrashModal.classList.add('crashed');
+                pauseCrashTitle.innerText = "CRASH DETECTED!";
+                pauseCrashText.innerHTML = `Survival Time: <strong>${Math.floor(gameTime)}s</strong><br>Final Score: <strong>${Math.floor(score)}</strong>`;
+                pauseResumeBtn.innerText = "PLAY AGAIN";
+            }
             settingsModal.classList.add('hidden');
             screenOverlay.classList.remove('hidden');
         }
@@ -4813,6 +5346,31 @@
         // Controls are keyboard-driven locally — network data ONLY moves the
         // opponent ghost car and syncs the environment. Your own car is NEVER
         // affected by network data.
+                // Rematch state tracking
+        window.myRematchRequested = false;
+        window.oppRematchRequested = false;
+        window.isRematchStarting = false;
+
+        window.triggerRematchRace = function () {
+            window.myRematchRequested = false;
+            window.oppRematchRequested = false;
+            window.isRematchStarting = false;
+            opponentAlive = true;
+
+            // Reset scores & speeds
+            score = 0;
+            oppNetScore = 0;
+            oppNetSpeed = 0;
+            currentSpeed = 0;
+
+            // Hide any result modals
+            const resModal = document.getElementById('mp-result-modal');
+            if (resModal) resModal.classList.add('hidden');
+
+            // Run the countdown and restart the multiplayer race!
+            runCountdown();
+        };
+
         function setupConnection(connection) {
             connection.on('data', data => {
                 if (!data || !data.type) return;
@@ -4898,7 +5456,65 @@
 
                 // ── Countdown trigger (host → client) ──
                 else if (data.type === 'countdown_go') {
-                    if (myPlayerSlot === 'client') runCountdown();
+                    if (myPlayerSlot === 'client') {
+                        const resModal = document.getElementById('mp-result-modal');
+                        if (resModal) resModal.classList.add('hidden');
+                        runCountdown();
+                    }
+                }
+
+                // ── Rematch request from opponent ──
+                else if (data.type === 'rematch_request') {
+                    window.oppRematchRequested = true;
+                    const rBtn = document.querySelector('#mp-result-modal #mpr-rematch-btn');
+                    const rStatus = document.querySelector('#mp-result-modal #mpr-rematch-status');
+
+                    if (window.myRematchRequested) {
+                        // Both players have requested rematch!
+                        window.isRematchStarting = true;
+                        if (rStatus) {
+                            rStatus.classList.remove('hidden');
+                            rStatus.textContent = "BOTH PLAYERS READY! STARTING...";
+                        }
+                        try { window.conn.send({ type: 'rematch_accept' }); } catch (e) { }
+
+                        setTimeout(() => {
+                            const resModal = document.getElementById('mp-result-modal');
+                            if (resModal) resModal.classList.add('hidden');
+                            if (myPlayerSlot === 'host') {
+                                try { window.conn.send({ type: 'countdown_go' }); } catch (e) { }
+                            }
+                            window.triggerRematchRace();
+                        }, 600);
+                    } else {
+                        // Opponent wants rematch, we haven't clicked yet
+                        if (rBtn) {
+                            rBtn.textContent = 'ACCEPT REMATCH! ⚡';
+                            rBtn.classList.add('pulse-ready');
+                        }
+                        if (rStatus) {
+                            rStatus.classList.remove('hidden');
+                            rStatus.textContent = 'Opponent requested a rematch! Tap to accept.';
+                        }
+                    }
+                }
+
+                // ── Rematch accepted by opponent ──
+                else if (data.type === 'rematch_accept') {
+                    window.isRematchStarting = true;
+                    const rStatus = document.querySelector('#mp-result-modal #mpr-rematch-status');
+                    if (rStatus) {
+                        rStatus.classList.remove('hidden');
+                        rStatus.textContent = "REMATCH ACCEPTED! STARTING...";
+                    }
+                    setTimeout(() => {
+                        const resModal = document.getElementById('mp-result-modal');
+                        if (resModal) resModal.classList.add('hidden');
+                        if (myPlayerSlot === 'host') {
+                            try { window.conn.send({ type: 'countdown_go' }); } catch (e) { }
+                        }
+                        window.triggerRematchRace();
+                    }, 600);
                 }
 
                 // ── Graceful disconnect ──
@@ -5254,6 +5870,24 @@
 
         // ────────── OPPONENT DISCONNECTED ──────────────────────────────────────
         function handleOpponentDisconnect() {
+            const rBtn = document.querySelector('#mp-result-modal #mpr-rematch-btn');
+            const rStatus = document.querySelector('#mp-result-modal #mpr-rematch-status');
+            if (rStatus) {
+                rStatus.classList.remove('hidden');
+                rStatus.textContent = 'Opponent left the room.';
+            }
+            if (rBtn) {
+                rBtn.textContent = 'PLAY SOLO';
+                rBtn.classList.remove('waiting', 'pulse-ready');
+                rBtn.disabled = false;
+                rBtn.onclick = () => {
+                    const resModal = document.getElementById('mp-result-modal');
+                    if (resModal) resModal.classList.add('hidden');
+                    cleanupMultiplayer();
+                    startGame();
+                };
+            }
+
             if (!isMultiplayerMode || !opponentAlive) return;
             opponentAlive = false;
             // Opponent dropped connection without crashing — show as a win by default
@@ -5296,6 +5930,73 @@
             const fresh = modal.cloneNode(true);
             fresh.classList.remove('hidden');
             modal.parentNode.replaceChild(fresh, modal);
+
+            // Reset rematch flags for new result view
+            window.isRematchStarting = false;
+
+            const rematchBtn = fresh.querySelector('#mpr-rematch-btn');
+            const rematchStatus = fresh.querySelector('#mpr-rematch-status');
+
+            // Check if opponent already requested rematch before result card rendered
+            if (rematchBtn) {
+                if (window.oppRematchRequested) {
+                    rematchBtn.textContent = 'ACCEPT REMATCH! ⚡';
+                    rematchBtn.classList.add('pulse-ready');
+                    if (rematchStatus) {
+                        rematchStatus.classList.remove('hidden');
+                        rematchStatus.textContent = 'Opponent requested a rematch! Tap to accept.';
+                    }
+                } else {
+                    rematchBtn.textContent = 'PLAY AGAIN';
+                    rematchBtn.classList.remove('waiting', 'pulse-ready');
+                    rematchBtn.disabled = false;
+                }
+
+                rematchBtn.addEventListener('click', () => {
+                    if (window.isRematchStarting) return;
+
+                    // If connected via WebRTC
+                    if (window.conn && window.conn.open) {
+                        window.myRematchRequested = true;
+
+                        if (window.oppRematchRequested) {
+                            // Both players want rematch!
+                            window.isRematchStarting = true;
+                            rematchBtn.textContent = 'STARTING REMATCH...';
+                            rematchBtn.classList.add('waiting');
+                            rematchBtn.disabled = true;
+                            if (rematchStatus) {
+                                rematchStatus.classList.remove('hidden');
+                                rematchStatus.textContent = 'Both players ready! Starting in 3, 2, 1...';
+                            }
+                            try { window.conn.send({ type: 'rematch_accept' }); } catch (e) { }
+
+                            setTimeout(() => {
+                                fresh.classList.add('hidden');
+                                if (myPlayerSlot === 'host') {
+                                    try { window.conn.send({ type: 'countdown_go' }); } catch (e) { }
+                                }
+                                window.triggerRematchRace();
+                            }, 600);
+                        } else {
+                            // Send rematch request to opponent
+                            try { window.conn.send({ type: 'rematch_request' }); } catch (e) { }
+                            rematchBtn.textContent = 'WAITING FOR OPPONENT...';
+                            rematchBtn.classList.add('waiting');
+                            rematchBtn.disabled = true;
+                            if (rematchStatus) {
+                                rematchStatus.classList.remove('hidden');
+                                rematchStatus.textContent = 'Rematch challenge sent! Waiting for opponent...';
+                            }
+                        }
+                    } else {
+                        // Connection lost or offline test -> start game directly
+                        fresh.classList.add('hidden');
+                        cleanupMultiplayer();
+                        startGame();
+                    }
+                });
+            }
 
             // Wire up leave button on the fresh clone
             fresh.querySelector('#mpr-leave-btn').addEventListener('click', () => {
