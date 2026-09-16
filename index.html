@@ -3859,37 +3859,57 @@
             return group;
         }
 
+        // Maximum NPC vehicles allowed on road at once (prevents overcrowding)
+        const MAX_TRAFFIC_CARS = 6;
+
         function spawnTraffic() {
-            if (currentSpeed > 0.05 && Math.random() < 0.045) {
+            if (currentSpeed > 0.05 && Math.random() < 0.025 && trafficCars.length < MAX_TRAFFIC_CARS) {
                 const randomLane = laneXPositions[Math.floor(Math.random() * laneXPositions.length)];
+                const spawnZ = -160;
                 const exists = trafficCars.some(car => car.position.z < -130
                     && Math.abs(car.position.x - randomLane) < 1.5
                     && Math.abs(car.position.z + 160) < minimumVehicleCenterDistance);
 
+                // Prevent all 3 lanes being occupied near the same Z (road blocking check):
+                // Count how many distinct lanes are already occupied within 30 units of spawn point
                 if (!exists) {
-                    const vehicleTypes = ['car', 'truck', 'schoolbus', 'thar', 'bike', 'police'];
-                    const chosenType = vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)];
+                    const lanesOccupiedNearSpawn = new Set(
+                        trafficCars
+                            .filter(car => Math.abs(car.position.z - spawnZ) < 30)
+                            .map(car => laneXPositions.reduce((closest, lx) =>
+                                Math.abs(lx - car.position.x) < Math.abs(closest - car.position.x) ? lx : closest,
+                                laneXPositions[0]
+                            ))
+                    );
+                    // Block spawn if it would fill all 3 lanes at approximately the same depth
+                    const wouldBlockAllLanes = lanesOccupiedNearSpawn.size >= (laneXPositions.length - 1)
+                        && lanesOccupiedNearSpawn.has(randomLane);
 
-                    let trafficCar;
-                    if (chosenType === 'truck') trafficCar = createTataTruck();
-                    else if (chosenType === 'schoolbus') trafficCar = createSchoolBus();
-                    else if (chosenType === 'thar') trafficCar = createMahindraThar();
-                    else if (chosenType === 'bike') trafficCar = createMotorcycle();
-                    else if (chosenType === 'police') trafficCar = createPoliceCar();
-                    else trafficCar = createRealisticCar(0x1e90ff);
+                    if (!wouldBlockAllLanes) {
+                        const vehicleTypes = ['car', 'truck', 'schoolbus', 'thar', 'bike', 'police'];
+                        const chosenType = vehicleTypes[Math.floor(Math.random() * vehicleTypes.length)];
 
-                    trafficCar.userData = {
-                        laneX: randomLane,
-                        targetX: randomLane,
-                        speedBoost: 0,
-                        cruiseSpeed: 0.09 + Math.random() * 0.07,
-                        isYielding: false,
-                        stoppedForLight: false
-                    };
+                        let trafficCar;
+                        if (chosenType === 'truck') trafficCar = createTataTruck();
+                        else if (chosenType === 'schoolbus') trafficCar = createSchoolBus();
+                        else if (chosenType === 'thar') trafficCar = createMahindraThar();
+                        else if (chosenType === 'bike') trafficCar = createMotorcycle();
+                        else if (chosenType === 'police') trafficCar = createPoliceCar();
+                        else trafficCar = createRealisticCar(0x1e90ff);
 
-                    trafficCar.position.set(randomLane, 0, -160);
-                    scene.add(trafficCar);
-                    trafficCars.push(trafficCar);
+                        trafficCar.userData = {
+                            laneX: randomLane,
+                            targetX: randomLane,
+                            speedBoost: 0,
+                            cruiseSpeed: 0.09 + Math.random() * 0.07,
+                            isYielding: false,
+                            stoppedForLight: false
+                        };
+
+                        trafficCar.position.set(randomLane, 0, spawnZ);
+                        scene.add(trafficCar);
+                        trafficCars.push(trafficCar);
+                    }
                 }
             }
 
@@ -3961,6 +3981,35 @@
                         secondCar.position.z = firstCar.position.z - minimumGap;
                     } else {
                         firstCar.position.z = secondCar.position.z - minimumGap;
+                    }
+                }
+            }
+
+            // Anti-road-block: prevent 3 NPCs from filling all 3 lanes at the same Z position.
+            // Find clusters of cars within a 15-unit Z window that cover all 3 lanes,
+            // then push the rearmost car back to break the blockade.
+            if (trafficCars.length >= laneXPositions.length) {
+                for (let fi = 0; fi < trafficCars.length; fi++) {
+                    const anchor = trafficCars[fi];
+                    const cluster = trafficCars.filter(c =>
+                        Math.abs(c.position.z - anchor.position.z) < 15
+                    );
+                    if (cluster.length < laneXPositions.length) continue;
+
+                    // Check if all lanes are covered by this cluster
+                    const coveredLanes = new Set(
+                        cluster.map(c => laneXPositions.reduce((best, lx) =>
+                            Math.abs(lx - c.position.x) < Math.abs(best - c.position.x) ? lx : best,
+                            laneXPositions[0]
+                        ))
+                    );
+                    if (coveredLanes.size >= laneXPositions.length) {
+                        // Stagger the rearmost car (lowest Z) further back by 20 units
+                        const rearmost = cluster.reduce((r, c) => c.position.z < r.position.z ? c : r, cluster[0]);
+                        if (!rearmost.userData.stoppedForLight) {
+                            rearmost.position.z -= 20;
+                        }
+                        break; // Only fix one cluster per frame to avoid jitter
                     }
                 }
             }
