@@ -999,13 +999,29 @@
         }
 
         @keyframes pulseRematch {
-            0%, 100% { opacity: 0.7; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.02); }
+
+            0%,
+            100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
         }
 
         @keyframes pulseReady {
-            0% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.4); transform: scale(1); }
-            100% { box-shadow: 0 0 35px rgba(0, 255, 136, 0.9); transform: scale(1.04); }
+            0% {
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+                transform: scale(1);
+            }
+
+            100% {
+                box-shadow: 0 0 35px rgba(0, 255, 136, 0.9);
+                transform: scale(1.04);
+            }
         }
 
         #mp-result-modal .mpr-leave-btn {
@@ -1106,8 +1122,8 @@
                 </div>
             </div>
             <div class="mpr-actions">
-                <button class="mpr-btn mpr-rematch-btn" id="mpr-rematch-btn">🔄 PLAY AGAIN</button>
-                <button class="mpr-btn mpr-leave-btn" id="mpr-leave-btn">🚪 LEAVE ROOM</button>
+                <button class="mpr-btn mpr-rematch-btn" id="mpr-rematch-btn">PLAY AGAIN</button>
+                <button class="mpr-btn mpr-leave-btn" id="mpr-leave-btn">LEAVE ROOM</button>
             </div>
             <div class="mpr-rematch-status hidden" id="mpr-rematch-status"></div>
         </div>
@@ -4669,42 +4685,88 @@
 
             spawnTraffic();
             updateJunctionPedestrians(delta);
-            const trafficFrozenForSafety = trafficFrozenByHorn || junctionPedestrians.length > 0;
+            const trafficFrozenForSafety = trafficFrozenByHorn;
             playerBox.setFromObject(playerCar);
 
             for (let i = trafficCars.length - 1; i >= 0; i--) {
                 const car = trafficCars[i];
+                const carHalfLength = car.userData.halfLength || 2.2;
+                const carFrontZ = car.position.z - carHalfLength;
+                const isPreAllowed = !!(car.userData.isPreAllowed || car.userData.isPolice || car.userData.isEmergency);
 
                 let shouldStop = false;
                 let stopJunction = null;
-                let closestJunctionDistance = Infinity;
-                if (trafficLightState !== 'GREEN') {
+                let targetCarCenterZ = 0;
+                let closestStopDist = Infinity;
+
+                if (!isPreAllowed && (trafficLightState === 'RED' || trafficLightState === 'YELLOW')) {
                     signalSections.forEach(signalSection => {
-                        const distToSignal = signalSection.position.z - car.position.z;
-                        if (distToSignal > 0 && distToSignal < 35 && distToSignal < closestJunctionDistance) {
-                            shouldStop = true;
-                            stopJunction = signalSection;
-                            closestJunctionDistance = distToSignal;
+                        const crossingHalfDepth = signalSection.userData.crossingHalfDepth || (5 * 0.65 + 0.21);
+                        const npcStopBuffer = signalSection.userData.npcStopBeforeCrossing || 10;
+                        // Near edge of zebra crossing facing approaching traffic (+Z side):
+                        const zebraNearEdgeZ = signalSection.position.z + crossingHalfDepth;
+                        // Stop line for front of car is 10m before zebra crossing:
+                        const stopLineFrontZ = zebraNearEdgeZ + npcStopBuffer;
+                        const stopCenterZ = stopLineFrontZ + carHalfLength;
+
+                        // Distance from car to target stop point (car approaches from +Z towards -Z):
+                        const distToStop = car.position.z - stopCenterZ;
+
+                        if (distToStop >= -1.0 && distToStop < 60 && distToStop < closestStopDist) {
+                            if (!car.userData.clearedJunction) {
+                                shouldStop = true;
+                                stopJunction = signalSection;
+                                targetCarCenterZ = stopCenterZ;
+                                closestStopDist = distToStop;
+                            }
+                        }
+                    });
+                }
+
+                // If car was already past 10m stop line when light turned RED, let it clear safely
+                if (trafficLightState === 'GREEN') {
+                    car.userData.clearedJunction = false;
+                } else if (trafficLightState === 'RED' && !shouldStop && !isPreAllowed) {
+                    signalSections.forEach(signalSection => {
+                        const zebraNearEdgeZ = signalSection.position.z + (signalSection.userData.crossingHalfDepth || 3.46);
+                        if (carFrontZ < zebraNearEdgeZ + 9.5 && carFrontZ > signalSection.position.z - 20) {
+                            car.userData.clearedJunction = true;
                         }
                     });
                 }
 
                 const extraForwardMovement = trafficFrozenForSafety ? 0 : (car.userData.speedBoost || 0) * delta;
-                const stopDistance = stopJunction && stopJunction.userData.isSignalSection
-                    ? stopJunction.userData.crossingHalfDepth + stopJunction.userData.npcStopBeforeCrossing
-                    : vehicleStopCenterOffset;
-                const carSpeedMult = shouldStop && closestJunctionDistance <= stopDistance
-                    ? 0.0
-                    : (car.userData.cruiseSpeed * delta * 90);
+
+                let carSpeedMult = car.userData.cruiseSpeed * delta * 90;
+                if (shouldStop) {
+                    if (closestStopDist <= 0.05 || car.position.z <= targetCarCenterZ) {
+                        carSpeedMult = 0.0;
+                        car.position.z = targetCarCenterZ;
+                        car.userData.stoppedForLight = true;
+                    } else if (trafficLightState === 'RED') {
+                        // Smooth deceleration all the way to the 10m stop mark
+                        const decelFactor = THREE.MathUtils.clamp(closestStopDist / 10.0, 0.18, 1.0);
+                        carSpeedMult = Math.min(carSpeedMult * decelFactor, closestStopDist);
+                    } else if (trafficLightState === 'YELLOW') {
+                        const decelFactor = THREE.MathUtils.clamp(closestStopDist / 20.0, 0.35, 1.0);
+                        carSpeedMult *= decelFactor;
+                    }
+                } else {
+                    car.userData.stoppedForLight = false;
+                }
+
+                if (car.userData.stoppedForLight && closestStopDist <= 0.05) {
+                    carSpeedMult = 0.0;
+                }
+
                 if (!trafficFrozenForSafety) {
                     car.position.z += moveDist - carSpeedMult - extraForwardMovement;
                 }
 
                 if (shouldStop && stopJunction) {
-                    const stopLinePosition = stopJunction.position.z - stopDistance;
-                    car.position.z = stopJunction.userData.isSignalSection
-                        ? Math.min(car.position.z, stopLinePosition)
-                        : Math.max(car.position.z, stopLinePosition);
+                    if (closestStopDist <= 0.05 || car.position.z <= targetCarCenterZ) {
+                        car.position.z = Math.max(car.position.z, targetCarCenterZ);
+                    }
                 }
 
                 if (Math.random() < 0.45 && !shouldStop) {
@@ -4856,8 +4918,6 @@
         let opponentAlive = true;
         let currentRoomCode = null;
         let fallbackTriggered = false;
-        let myRematchRequested = false;
-        let oppRematchRequested = false;
 
         // Latest opponent network state
         let oppNetX = 0;            // lane X position from peer
@@ -5130,104 +5190,10 @@
                     stopRainSound();
                     window.showMpResult('winner', Math.floor(score), oppNetScore);
                 }
-
-                // ── Opponent wants a rematch ──
-                else if (data.type === 'rematch_request') {
-                    oppRematchRequested = true;
-                    const modal = document.getElementById('mp-result-modal');
-                    const statusEl = modal ? modal.querySelector('#mpr-rematch-status') : null;
-                    const rematchBtn = modal ? modal.querySelector('#mpr-rematch-btn') : null;
-                    if (myRematchRequested) {
-                        // Both agreed — host drives the restart
-                        if (myPlayerSlot === 'host') {
-                            if (conn && conn.open) conn.send({ type: 'rematch_start' });
-                            startRematchRace();
-                        } else {
-                            if (statusEl) { statusEl.textContent = 'Both ready! Starting race…'; statusEl.classList.remove('hidden'); }
-                        }
-                    } else {
-                        // We haven't clicked yet — notify us
-                        if (statusEl) { statusEl.textContent = '⚡ Opponent wants a rematch! Click PLAY AGAIN!'; statusEl.classList.remove('hidden'); }
-                        if (rematchBtn) rematchBtn.classList.add('pulse-ready');
-                    }
-                }
-
-                // ── Host confirms rematch — client starts ──
-                else if (data.type === 'rematch_start') {
-                    if (myPlayerSlot === 'client') {
-                        startRematchRace();
-                    }
-                }
             });
 
             connection.on('close', () => { handleOpponentDisconnect(); });
             connection.on('error', () => { handleOpponentDisconnect(); });
-        }
-
-        // ────────── REMATCH HELPERS ────────────────────────────────────────────
-        function requestRematch() {
-            myRematchRequested = true;
-            // Send request to opponent
-            if (conn && conn.open) conn.send({ type: 'rematch_request' });
-
-            const modal = document.getElementById('mp-result-modal');
-            const statusEl = modal ? modal.querySelector('#mpr-rematch-status') : null;
-            const rematchBtn = modal ? modal.querySelector('#mpr-rematch-btn') : null;
-
-            if (oppRematchRequested) {
-                // Opponent already clicked — host triggers start immediately
-                if (myPlayerSlot === 'host') {
-                    if (conn && conn.open) conn.send({ type: 'rematch_start' });
-                    startRematchRace();
-                } else {
-                    if (statusEl) { statusEl.textContent = 'Both ready! Starting race…'; statusEl.classList.remove('hidden'); }
-                }
-            } else {
-                // Waiting for opponent
-                if (rematchBtn) {
-                    rematchBtn.disabled = true;
-                    rematchBtn.textContent = 'WAITING FOR OPPONENT… ⏳';
-                    rematchBtn.classList.remove('pulse-ready');
-                    rematchBtn.classList.add('waiting');
-                }
-                if (statusEl) { statusEl.textContent = 'Waiting for opponent to click Play Again…'; statusEl.classList.remove('hidden'); }
-            }
-        }
-
-        function startRematchRace() {
-            // Hide result modal
-            const modal = document.getElementById('mp-result-modal');
-            if (modal) modal.classList.add('hidden');
-
-            // Reset rematch flags
-            myRematchRequested = false;
-            oppRematchRequested = false;
-
-            // Reset opponent alive state
-            opponentAlive = true;
-
-            // Reset countdown guard
-            isCountdownRunning = false;
-
-            // Reset game metrics so fresh race starts from 0
-            score = 0;
-            gameTime = 0;
-            currentSpeed = 0;
-            oppNetScore = 0;
-            oppNetX = 0;
-            oppPrevX = 0;
-            oppRawSpeed = 0.28;
-
-            // Reset opponent HUD
-            if (oppScoreEl) oppScoreEl.textContent = '0';
-            if (oppSpeedEl) oppSpeedEl.textContent = '0';
-
-            // Remove old countdown overlay if still present
-            const oldCd = document.getElementById('mp-countdown');
-            if (oldCd && oldCd.parentNode) oldCd.parentNode.removeChild(oldCd);
-
-            // Restart the race (host coordinates environment)
-            beginCountdown();
         }
 
         // ────────── COUNTDOWN ─────────────────────────────────────────────────
@@ -5525,13 +5491,13 @@
                 _lastBgSyncTime = now;
 
                 conn.send({
-                    type:        'sync',
-                    x:           Math.round(playerCar.position.x * 100) / 100,
-                    score:       Math.floor(score),
-                    speed:       Math.floor(currentSpeed * 220),
-                    rawSpeed:    currentSpeed,
+                    type: 'sync',
+                    x: Math.round(playerCar.position.x * 100) / 100,
+                    score: Math.floor(score),
+                    speed: Math.floor(currentSpeed * 220),
+                    rawSpeed: currentSpeed,
                     vehicleType: selectedVehicleType,
-                    alive:       true
+                    alive: true
                 });
             }, 50);
         }
@@ -5594,37 +5560,16 @@
             myEl.textContent = myScore;
             oppEl.textContent = oppScore;
 
-            // Reset rematch state whenever result is shown
-            myRematchRequested = false;
-            oppRematchRequested = false;
-
             // Re-trigger animation by cloning the node
             const fresh = modal.cloneNode(true);
             fresh.classList.remove('hidden');
             modal.parentNode.replaceChild(fresh, modal);
 
-            // Wire up LEAVE button on the fresh clone
+            // Wire up leave button on the fresh clone
             fresh.querySelector('#mpr-leave-btn').addEventListener('click', () => {
                 fresh.classList.add('hidden');
                 window.quitToMainMenu();
             });
-
-            // Wire up PLAY AGAIN (rematch) button
-            const rematchBtnFresh = fresh.querySelector('#mpr-rematch-btn');
-            if (rematchBtnFresh) {
-                // Reset visual state
-                rematchBtnFresh.disabled = false;
-                rematchBtnFresh.textContent = '🔄 PLAY AGAIN';
-                rematchBtnFresh.classList.remove('waiting', 'pulse-ready');
-                // Attach listener
-                rematchBtnFresh.addEventListener('click', () => {
-                    requestRematch();
-                });
-            }
-
-            // Hide status line initially
-            const statusFresh = fresh.querySelector('#mpr-rematch-status');
-            if (statusFresh) { statusFresh.textContent = ''; statusFresh.classList.add('hidden'); }
 
             startLobbyMusic();
         };
@@ -5661,8 +5606,6 @@
             currentRoomCode = null;
             myPlayerSlot = null;
             opponentAlive = true;   // reset for next race
-            myRematchRequested = false;
-            oppRematchRequested = false;
             fallbackTriggered = false;
             isCountdownRunning = false;
             _lastMoveDist = 0;
