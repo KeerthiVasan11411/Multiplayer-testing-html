@@ -104,9 +104,20 @@
             }
 
             @keyframes crashFlashAnim {
-                0% { opacity: 1; filter: contrast(200%) brightness(150%); }
-                20% { opacity: 0.85; filter: contrast(160%) brightness(130%); }
-                100% { opacity: 0; filter: contrast(100%) brightness(100%); }
+                0% {
+                    opacity: 1;
+                    filter: contrast(200%) brightness(150%);
+                }
+
+                20% {
+                    opacity: 0.85;
+                    filter: contrast(160%) brightness(130%);
+                }
+
+                100% {
+                    opacity: 0;
+                    filter: contrast(100%) brightness(100%);
+                }
             }
 
             /* ── Top-Left HUD Buttons ───────────────────────────── */
@@ -1233,6 +1244,106 @@
                 display: none !important;
             }
 
+            #pilot-name-modal {
+                position: fixed;
+                inset: 0;
+                z-index: 1000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                background: rgba(2, 4, 14, 0.88);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+            }
+
+            #pilot-name-modal .pilot-name-card {
+                width: min(430px, 100%);
+                padding: 30px 32px 26px;
+                background: linear-gradient(145deg, rgba(9, 18, 38, 0.98), rgba(5, 7, 22, 0.98));
+                border: 1px solid rgba(0, 240, 255, 0.5);
+                border-radius: 14px;
+                box-shadow: 0 0 50px rgba(0, 210, 255, 0.18), inset 0 0 35px rgba(0, 240, 255, 0.04);
+                color: #eafcff;
+                text-align: center;
+            }
+
+            #pilot-name-modal .pilot-name-kicker {
+                color: var(--cyan);
+                font-family: var(--font-ui);
+                font-size: 10px;
+                font-weight: 800;
+                letter-spacing: 3px;
+            }
+
+            #pilot-name-modal .pilot-name-title {
+                margin-top: 9px;
+                color: #fff;
+                font-family: var(--font-r);
+                font-size: 27px;
+                letter-spacing: 2px;
+                text-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
+            }
+
+            #pilot-name-modal .pilot-name-subtitle {
+                margin-top: 9px;
+                color: #8fa7c4;
+                font-family: var(--font-ui);
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            #pilot-name-modal #pilot-name-input {
+                margin-top: 20px;
+                width: 100%;
+                height: 48px;
+                padding: 0 16px;
+                background: rgba(2, 7, 20, 0.96);
+                color: #eafcff;
+                caret-color: var(--cyan);
+                font-family: var(--font-ui);
+                font-size: 14px;
+                font-weight: 700;
+                border-radius: 7px;
+                border: 1px solid rgba(0, 240, 255, 0.5);
+                outline: none;
+                text-align: left;
+                transition: border-color 0.2s, box-shadow 0.2s;
+            }
+
+            #pilot-name-modal #pilot-name-input:focus {
+                border-color: var(--cyan);
+                box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.12), 0 0 20px rgba(0, 240, 255, 0.2);
+            }
+
+            #pilot-name-modal #pilot-name-input::placeholder {
+                color: #7188a6;
+                opacity: 1;
+                font-weight: 600;
+            }
+
+            #pilot-name-modal #pilot-name-confirm {
+                width: 100%;
+                margin-top: 4px;
+            }
+
+            #leaderboardModal {
+                position: fixed;
+                inset: 0;
+                z-index: 900;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                background: rgba(2, 4, 14, 0.72);
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+            }
+
+            #leaderboardModal.hidden {
+                display: none !important;
+            }
+
             .modal-content {
                 display: flex;
                 flex-direction: column;
@@ -1449,8 +1560,16 @@
             }
 
             @keyframes dashBlink {
-                0% { opacity: 0.45; transform: scaleX(0.85); }
-                100% { opacity: 1; transform: scaleX(1.1); box-shadow: 0 0 16px #00f0ff; }
+                0% {
+                    opacity: 0.45;
+                    transform: scaleX(0.85);
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: scaleX(1.1);
+                    box-shadow: 0 0 16px #00f0ff;
+                }
             }
 
             .mp-hint {
@@ -2252,7 +2371,7 @@
                 <div class="lobby-quick-actions">
                     <div class="pilot-badge">
                         <span class="pilot-label">PILOT LINK</span>
-                        <span class="pilot-callsign">CYBER-01</span>
+                        <span class="pilot-callsign" id="pilot-callsign">CYBER-01</span>
                     </div>
                     <button class="lobby-icon-btn" id="menuSettingsBtn" title="Settings">⚙</button>
                     <button class="lobby-icon-btn" id="fullscreenBtn" title="Toggle Fullscreen">⛶</button>
@@ -2364,6 +2483,18 @@
                     </button>
 
                     <!-- Multiplayer Quick Link -->
+                    <!-- Leaderboard Quick Link -->
+                    <div class="lobby-mode-card" id="menuLeaderboardBtn"
+                        style="margin-top: 10px; border-color: rgba(255, 215, 0, 0.3);">
+                        <div class="lmc-left">
+                            <div class="lmc-badge" style="background: rgba(255, 215, 0, 0.2); color: #ffd700;">TOP
+                                RACERS</div>
+                            <div class="lmc-title" style="color: #ffd700;">🏆 GLOBAL LEADERBOARD</div>
+                            <div class="lmc-desc">View global high scores & rankings</div>
+                        </div>
+                        <div class="lmc-arrow" style="color: #ffd700;">→</div>
+                    </div>
+
                     <div class="lobby-mode-card" id="multiplayerBtn">
                         <div class="lmc-left">
                             <div class="lmc-badge">1v1 ONLINE</div>
@@ -2415,6 +2546,8 @@
             <div class="btn-group"
                 style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:8px;">
                 <button class="action-btn" id="pauseResumeBtn" style="min-width:160px;">RESUME RACE</button>
+                <button class="action-btn secondary" id="leaderboardBtn"
+                    style="border-color: #ffd700; color: #ffd700;">LEADERBOARD</button>
                 <button class="action-btn secondary" id="pauseSettingsBtn">SETTINGS</button>
                 <button class="action-btn secondary" id="pauseQuitBtn"
                     style="background:linear-gradient(135deg,#ff0055 0%,#aa0022 100%); border-color:var(--red);">MAIN
@@ -2457,6 +2590,50 @@
                     style="background: linear-gradient(135deg, #ff2222 0%, #aa0000 100%); box-shadow: 0 0 25px rgba(255,0,0,0.5);">QUIT
                     TO MAIN MENU</button>
             </div>
+        </div>
+    </div>
+
+    <!-- ── GLOBAL LEADERBOARD MODAL ──────────────────────────── -->
+    <div class="modal-content hidden" id="leaderboardModal"
+        style="max-width: 650px; border-color: rgba(255, 215, 0, 0.5);">
+        <div class="title-container">
+            <h1 style="color: #ffd700; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);">GLOBAL LEADERBOARD</h1>
+            <div class="sub-title">Top Cyber Racers & High Scores</div>
+        </div>
+        <div id="leaderboardLoading"
+            style="text-align: center; color: var(--cyan); padding: 20px; font-family: var(--font-ui); display: none;">
+            LOADING SCORES...</div>
+        <div id="leaderboardTable"
+            style="max-height: 340px; overflow-y: auto; background: rgba(5, 5, 18, 0.85); border: 1px solid rgba(0, 240, 255, 0.2); border-radius: 8px; margin: 15px 0;">
+            <table
+                style="width: 100%; border-collapse: collapse; text-align: left; font-family: var(--font-ui); font-size: 13px;">
+                <thead>
+                    <tr
+                        style="border-bottom: 2px solid rgba(0,240,255,0.4); color: var(--cyan); background: rgba(0,240,255,0.08);">
+                        <th style="padding: 12px 14px;">RANK</th>
+                        <th style="padding: 12px 14px;">PILOT</th>
+                        <th style="padding: 12px 14px;">SCORE</th>
+                        <th style="padding: 12px 14px;">DATE</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardTbody">
+                    <!-- Rows dynamically populated by openLeaderboard() -->
+                </tbody>
+            </table>
+        </div>
+        <div class="btn-group" style="margin-top: 15px; text-align: center;">
+            <button class="action-btn" id="closeLeaderboardBtn">CLOSE</button>
+        </div>
+    </div>
+
+    <div id="pilot-name-modal" class="hidden" role="dialog" aria-modal="true" aria-labelledby="pilot-name-title">
+        <div class="pilot-name-card">
+            <div class="pilot-name-kicker">RACER REGISTRATION // OFFLINE MODE</div>
+            <div class="pilot-name-title" id="pilot-name-title">CHOOSE YOUR CALLSIGN</div>
+            <div class="pilot-name-subtitle">This name will appear beside your best score on the global leaderboard.</div>
+            <input id="pilot-name-input" type="text" maxlength="16" autocomplete="nickname" placeholder="ENTER CALLSIGN">
+            <div id="pilot-name-error" style="min-height:18px; margin-top:8px; color:#ff3366; font-size:11px; text-align:center;"></div>
+            <button class="action-btn" id="pilot-name-confirm">ENTER GARAGE</button>
         </div>
     </div>
 
@@ -2543,6 +2720,7 @@
         const masterVolumeSlider = document.getElementById('masterVolumeSlider');
 
         function initAudio() {
+            if (audioCtx && audioCtx.state === 'suspended') { audioCtx.resume().catch(() => { }); }
             try {
                 if (!audioCtx) {
                     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -2858,9 +3036,44 @@
         const leaderboardLoading = document.getElementById('leaderboardLoading');
         const leaderboardTable = document.getElementById('leaderboardTable');
         const leaderboardTbody = document.getElementById('leaderboardTbody');
+        const pilotNameModal = document.getElementById('pilot-name-modal');
+        const pilotNameInput = document.getElementById('pilot-name-input');
+        const pilotNameError = document.getElementById('pilot-name-error');
+        const pilotNameConfirm = document.getElementById('pilot-name-confirm');
+        const pilotCallsign = document.getElementById('pilot-callsign');
 
         if (playerNameInput) {
-            playerNameInput.value = localStorage.getItem('cyber_player_name') || '';
+            playerNameInput.value = sessionStorage.getItem('cyber_player_name') || '';
+        }
+
+        function getPilotName() {
+            return (sessionStorage.getItem('cyber_player_name') || '').trim();
+        }
+
+        function updatePilotNameDisplay() {
+            if (pilotCallsign) pilotCallsign.textContent = getPilotName() || 'UNIDENTIFIED';
+        }
+
+        function requestPilotName() {
+            if (getPilotName()) return;
+            pilotNameModal.classList.remove('hidden');
+            screenOverlay.classList.add('hidden');
+            pilotNameInput.focus();
+        }
+
+        function savePilotName() {
+            const name = pilotNameInput.value.replace(/\s+/g, ' ').trim();
+            if (name.length < 2) {
+                pilotNameError.textContent = 'Enter at least 2 characters.';
+                pilotNameInput.focus();
+                return;
+            }
+            sessionStorage.setItem('cyber_player_name', name.slice(0, 16));
+            if (playerNameInput) playerNameInput.value = name.slice(0, 16);
+            updatePilotNameDisplay();
+            pilotNameModal.classList.add('hidden');
+            screenOverlay.classList.remove('hidden');
+            mainMenuModal.classList.remove('hidden');
         }
         const quitGameBtn = document.getElementById('quitGameBtn');
         const touchControlsEl = document.getElementById('touch-controls');
@@ -2919,6 +3132,7 @@
         let animFrameId = null;
         let gameTime = 0;
         let score = 0;
+        let offlineScoreSubmitted = false;
         let baseSpeed = 0.28;
         let currentSpeed = 0.28;
 
@@ -2991,6 +3205,12 @@
             document.addEventListener('webkitfullscreenchange', onWindowResize);
             setupTouchListeners();
             setupMenuListeners();
+            pilotNameConfirm.addEventListener('click', savePilotName);
+            pilotNameInput.addEventListener('keydown', event => {
+                if (event.key === 'Enter') savePilotName();
+            });
+            requestPilotName();
+            updatePilotNameDisplay();
 
             const enableAudioOnUserAction = () => {
                 initAudio();
@@ -3240,6 +3460,8 @@
                 }, 100);
                 return;
             }
+
+            submitOfflineScore(Math.floor(score));
 
             setTimeout(() => {
                 startLobbyMusic();
@@ -5584,6 +5806,149 @@
             });
         }
 
+
+        function resetWorldTrack() {
+            if (Array.isArray(trafficCars)) {
+                trafficCars.forEach(car => {
+                    if (car && scene) scene.remove(car);
+                });
+                trafficCars = [];
+            }
+            if (Array.isArray(crossTrafficCars)) {
+                crossTrafficCars.forEach(car => {
+                    if (car && scene) scene.remove(car);
+                });
+                crossTrafficCars = [];
+            }
+            if (Array.isArray(roadSegments) && roadSegments.length > 0) {
+                roadSegments.forEach((seg, idx) => {
+                    if (seg) seg.position.z = -idx * 20;
+                });
+            }
+            if (typeof playerCar !== 'undefined' && playerCar) {
+                const defaultX = (typeof myPlayerSlot !== 'undefined' && myPlayerSlot === 'host') ? 2.5 : (typeof myPlayerSlot !== 'undefined' && myPlayerSlot === 'client') ? -2.5 : 0;
+                playerCar.position.set(defaultX, 0, 0);
+                playerCar.rotation.set(0, 0, 0);
+            }
+            if (typeof camera !== 'undefined' && camera) {
+                camera.position.set(0, 3.5, 7);
+                camera.lookAt(0, 1, -10);
+            }
+            if (typeof spawnTraffic === 'function') {
+                spawnTraffic();
+            }
+        }
+
+        async function requestScoresApi(options = {}) {
+            const endpoints = ['/api/scores'];
+            if (window.location.hostname !== 'localhost' || window.location.port !== '3001') {
+                endpoints.push('http://localhost:3001/api/scores');
+            }
+
+            let lastError = null;
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint, options);
+                    if (response.ok) return response;
+                    lastError = new Error(`Leaderboard request failed: ${response.status}`);
+                } catch (error) {
+                    lastError = error;
+                }
+            }
+            throw lastError || new Error('Leaderboard server unavailable');
+        }
+
+        async function submitOfflineScore(finalScore) {
+            if (offlineScoreSubmitted || isMultiplayerMode || finalScore < 1) return;
+            const name = getPilotName();
+            if (!name) return;
+            offlineScoreSubmitted = true;
+
+            try {
+                await requestScoresApi({
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ player: name, score: finalScore })
+                });
+                if (submitMessage) {
+                    submitMessage.style.display = 'block';
+                    submitMessage.style.color = '#00ff88';
+                    submitMessage.textContent = 'Score added to the global leaderboard.';
+                }
+            } catch (error) {
+                offlineScoreSubmitted = false;
+                if (submitMessage) {
+                    submitMessage.style.display = 'block';
+                    submitMessage.style.color = '#ff3366';
+                    submitMessage.textContent = 'Score could not be saved. Start the backend server and try again.';
+                }
+                console.error('Offline score submission failed:', error);
+            }
+        }
+
+        async function openLeaderboard() {
+            const lbModal = document.getElementById('leaderboardModal');
+            if (!lbModal) return;
+            lbModal.classList.remove('hidden');
+            if (screenOverlay) screenOverlay.classList.add('hidden');
+            if (mainMenuModal) mainMenuModal.classList.add('hidden');
+
+            const lbLoading = document.getElementById('leaderboardLoading');
+            const lbTable = document.getElementById('leaderboardTable');
+            const lbTbody = document.getElementById('leaderboardTbody');
+
+            if (lbLoading) lbLoading.style.display = 'block';
+            if (lbTable) lbTable.style.display = 'none';
+            if (lbTbody) lbTbody.innerHTML = '';
+
+            try {
+                const res = await requestScoresApi();
+                const scores = await res.json();
+
+                if (lbLoading) lbLoading.style.display = 'none';
+                if (lbTable) lbTable.style.display = 'block';
+
+                if (lbTbody) {
+                    lbTbody.innerHTML = '';
+                    if (!scores || scores.length === 0) {
+                        lbTbody.innerHTML = '<tr><td colspan="4" style="padding:16px; text-align:center; color:#8fa7c4;">No high scores recorded yet!</td></tr>';
+                    } else {
+                        scores.forEach((entry, idx) => {
+                            const tr = document.createElement('tr');
+                            tr.style.cssText = 'border-bottom: 1px solid rgba(255,255,255,0.05); color: #e0e0e0;';
+                            const dateStr = entry.date ? new Date(entry.date).toLocaleDateString() : 'N/A';
+                            const rankColor = idx === 0 ? '#ffd700' : idx === 1 ? '#c0c0c0' : idx === 2 ? '#cd7f32' : 'var(--cyan)';
+                            const cells = [
+                                `#${idx + 1}`,
+                                entry.player || 'ANONYMOUS',
+                                (entry.score || 0).toLocaleString(),
+                                dateStr
+                            ];
+                            cells.forEach((value, cellIndex) => {
+                                const td = document.createElement('td');
+                                td.textContent = value;
+                                td.style.cssText = cellIndex === 0
+                                    ? `padding: 10px 14px; font-weight: bold; color: ${rankColor}`
+                                    : cellIndex === 2
+                                        ? 'padding: 10px 14px; color: #00ff88; font-weight: bold;'
+                                        : cellIndex === 3
+                                            ? 'padding: 10px 14px; color: #8fa7c4; font-size: 11px;'
+                                            : 'padding: 10px 14px; font-weight: bold;';
+                                tr.appendChild(td);
+                            });
+                            lbTbody.appendChild(tr);
+                        });
+                    }
+                }
+            } catch (err) {
+                console.error('Leaderboard fetch error:', err);
+                if (lbLoading) {
+                    lbLoading.textContent = 'Unable to load leaderboard data.';
+                    lbLoading.style.display = 'block';
+                }
+            }
+        }
+
         function setupMenuListeners() {
             startBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -5763,6 +6128,7 @@
                         screenOverlay.classList.add('hidden');
                         isPaused = false;
                     } else {
+                        screenOverlay.classList.remove('hidden');
                         mainMenuModal.classList.remove('hidden');
                     }
                 });
@@ -5770,19 +6136,15 @@
 
             if (submitScoreBtn) {
                 submitScoreBtn.addEventListener('click', async () => {
-                    const name = playerNameInput.value.trim() || 'ANONYMOUS';
-                    localStorage.setItem('cyber_player_name', name);
+                    const name = getPilotName();
+                    if (!name) {
+                        requestPilotName();
+                        return;
+                    }
                     submitScoreBtn.disabled = true;
                     submitScoreBtn.innerText = 'SAVING...';
                     try {
-                        const res = await fetch('/api/scores', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ player: name, score: Math.floor(score) })
-                        });
-                        const data = await res.json();
-                        submitMessage.style.display = 'block';
-                        submitMessage.innerText = `Saved! Rank: #${data.rank || 1}`;
+                        await submitOfflineScore(Math.floor(score));
                         setTimeout(() => {
                             playerInputContainer.classList.add('hidden');
                             openLeaderboard();
@@ -5966,12 +6328,14 @@
 
             gameTime = 0;
             score = 0;
+            offlineScoreSubmitted = false;
             weatherTimer = 0;
             trafficLightTimer = 0;
             trafficLightState = 'GREEN';
             isSuperBoostActive = false;
             hornTrafficFreezeTimer = 0;
 
+            resetWorldTrack();
             setWeatherEnvironment(Math.floor(Math.random() * 2));
 
             currentSpeed = baseSpeed;
@@ -6335,10 +6699,8 @@
 
             roadBridges.forEach(bridge => {
                 bridge.position.z += moveDist;
-                if (bridge.position.z > 70) {
-                    const minZ = Math.min(...roadBridges.map(item => item.position.z));
-                    const bounds = bridge.userData.sceneryBounds;
-                    bridge.position.z = getSafeSceneryPlacement(bridge.position.x, minZ - 130 - Math.random() * 90, bounds.xRadius, bounds.zRadius, bridge);
+                if (bridge.position.z > 80) {
+                    bridge.position.z -= 600;
                 }
             });
 
@@ -6574,6 +6936,25 @@
             if (typeof isMultiplayerMode !== 'undefined' && isMultiplayerMode && opponentCar && !isPaused) {
                 updateOpponentCar(delta);
             }
+
+            // Client: advance ghost NPCs with dead reckoning and check collisions
+            if (typeof isMultiplayerMode !== 'undefined' && isMultiplayerMode &&
+                typeof myPlayerSlot !== 'undefined' && myPlayerSlot === 'client') {
+                _advanceClientNpcs(delta, currentSpeed);
+
+                const ghostMeshes = Object.values(_clientNpcMeshes);
+                for (let i = 0; i < ghostMeshes.length; i++) {
+                    const gMesh = ghostMeshes[i];
+                    if (Math.abs(gMesh.position.z - playerCar.position.z) < 4.5 &&
+                        Math.abs(gMesh.position.x - playerCar.position.x) < 2.2) {
+                        const gBox = new THREE.Box3().setFromObject(gMesh);
+                        if (playerBox.intersectsBox(gBox)) {
+                            triggerPlayerCrash();
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
         function gameLoop() {
@@ -6647,6 +7028,8 @@
         let oppNetSpeed = 0;
         let oppRawSpeed = 0.28;         // local speed unit for relative Z physics
         let oppVehicleType = 'car';       // 'car' or 'bike' selected by opponent in lobby
+        let oppPilotName = 'OPPONENT';
+        let oppVehicleColor = 0x0044ff;
         let oppPrevX = 0;            // previous X for tilt calculation
 
         // moveDist captured from within the original update() each frame
@@ -6764,7 +7147,8 @@
                     try {
                         conn.send({
                             type: 'client_ready',
-                            vehicleType: selectedVehicleType
+                            vehicleType: selectedVehicleType,
+                            vehicleColor: playerCustomColor
                         });
                     } catch (e) { }
                     beginCountdown();
@@ -6850,6 +7234,15 @@
             oppNetSpeed = 0;
             currentSpeed = 0;
 
+            // Clear any ghost NPCs
+            Object.keys(_clientNpcMeshes).forEach(id => {
+                scene.remove(_clientNpcMeshes[id]);
+                delete _clientNpcMeshes[id];
+            });
+
+            // Re-align track
+            resetWorldTrack();
+
             // Hide any result modals
             const resModal = document.getElementById('mp-result-modal');
             if (resModal) resModal.classList.add('hidden');
@@ -6858,16 +7251,34 @@
             runCountdown();
         };
 
+        function updateOpponentColor(color) {
+            if (color === undefined || color === oppVehicleColor) return;
+            oppVehicleColor = color;
+            const curX = opponentCar ? opponentCar.position.x : null;
+            const curZ = opponentCar ? opponentCar.position.z : null;
+            spawnOpponentCar();
+            if (opponentCar && curX !== null) {
+                opponentCar.position.x = curX;
+                opponentCar.position.z = curZ;
+            }
+        }
+
         function setupConnection(connection) {
             connection.on('data', data => {
                 if (!data || !data.type) return;
 
                 // ── Regular position/score sync (20 Hz) ──
                 if (data.type === 'sync') {
+                    updateOpponentColor(data.vehicleColor);
                     oppPrevX = oppNetX;
                     oppNetX = data.x !== undefined ? data.x : oppNetX;
                     oppNetScore = data.score !== undefined ? data.score : oppNetScore;
                     oppNetSpeed = data.speed !== undefined ? data.speed : oppNetSpeed;
+                    if (data.pilotName) {
+                        oppPilotName = data.pilotName;
+                        const marker = document.getElementById('opponent-marker');
+                        if (marker) marker.textContent = oppPilotName;
+                    }
                     if (data.rawSpeed !== undefined) {
                         oppRawSpeed = data.rawSpeed;
                     } else if (data.speed !== undefined) {
@@ -6894,10 +7305,11 @@
 
                     if (!data.alive && isGameRunning) handleOpponentDisconnect();
 
-                    // ── CLIENT: mirror host NPC traffic & road segments ──
+                    // ── CLIENT: sync NPC targets from host ──
                     if (myPlayerSlot === 'client') {
-                        if (data.npcs) _applyHostNpcs(data.npcs);
-                        if (data.segs) _applyHostSegs(data.segs);
+                        if (data.npcs) {
+                            _applyHostNpcs(data.npcs);
+                        }
                         if (data.lightState) {
                             trafficLightState = data.lightState;
                             trafficLightTimer = data.lightTimer || trafficLightTimer;
@@ -6907,6 +7319,7 @@
 
                 // ── Client ready with vehicle type ──
                 else if (data.type === 'client_ready') {
+                    updateOpponentColor(data.vehicleColor);
                     if (data.vehicleType && data.vehicleType !== oppVehicleType) {
                         oppVehicleType = data.vehicleType;
                         if (opponentCar) {
@@ -6923,6 +7336,7 @@
 
                 // ── Host → Client: initial environment setup ──
                 else if (data.type === 'env_init') {
+                    updateOpponentColor(data.vehicleColor);
                     // Apply the SAME weather and light state the host has
                     setWeatherEnvironment(data.weather);
                     trafficLightState = data.lightState;
@@ -7062,7 +7476,8 @@
                         weather: sharedWeather,
                         lightState: 'GREEN',
                         lightTimer: 0,
-                        vehicleType: selectedVehicleType
+                        vehicleType: selectedVehicleType,
+                        vehicleColor: playerCustomColor
                     });
                     setTimeout(() => {
                         if (conn && conn.open) conn.send({ type: 'countdown_go' });
@@ -7177,8 +7592,24 @@
             oppHud.classList.remove('hidden');
             mpStatusBadge.classList.remove('hidden');
 
+            // Reset scores, speeds, and state
+            score = 0;
+            oppNetScore = 0;
+            oppNetSpeed = 0;
+            currentSpeed = 0;
+            _npcIdCounter = 0;
+
+            // Clear any ghost NPCs
+            Object.keys(_clientNpcMeshes).forEach(id => {
+                scene.remove(_clientNpcMeshes[id]);
+                delete _clientNpcMeshes[id];
+            });
+
             // Start normal single-player engine
             startGame();
+
+            // Re-align track so road segments, bridges, and signals are 100% in phase
+            resetWorldTrack();
 
             // Keep cars stationary during countdown
             currentSpeed = 0;
@@ -7210,7 +7641,7 @@
 
             // Render the vehicle type (Car or Bike) chosen by the opponent in the lobby
             const isBike = (oppVehicleType === 'bike');
-            const colorHex = isBike ? 0x00f0ff : 0x0044ff;
+            const colorHex = oppVehicleColor;
             if (isBike) {
                 opponentCar = createRealisticBike(colorHex, false);
             } else {
@@ -7251,7 +7682,7 @@
                     border: 1px solid #00f0ff;
                     border-radius: 4px;
                 `;
-                marker.innerText = "OPPONENT";
+                marker.textContent = oppPilotName;
                 document.body.appendChild(marker);
             }
 
@@ -7347,19 +7778,20 @@
                     speed: Math.floor(currentSpeed * 220),
                     rawSpeed: currentSpeed,
                     vehicleType: selectedVehicleType,
+                    vehicleColor: playerCustomColor,
+                    pilotName: getPilotName(),
                     alive: true
                 };
 
-                // ── HOST: broadcast ALL NPC traffic so client mirrors them ──
+                // ── HOST: broadcast ALL NPC traffic relative to host car ──
                 if (myPlayerSlot === 'host') {
-                    packet.npcs = trafficCars.map((car, idx) => ({
+                    packet.npcs = trafficCars.map(car => ({
                         id: car.userData.npcId,
-                        t: car.userData.npcType,
+                        t: car.userData.npcType || 'car',
                         x: Math.round(car.position.x * 100) / 100,
-                        z: Math.round(car.position.z * 100) / 100
+                        z: Math.round(car.position.z * 100) / 100,
+                        s: Math.round((car.userData.cruiseSpeed || 0.12) * 1000) / 1000
                     }));
-                    // Also send road segment offsets (for signal/bridge sync)
-                    packet.segs = roadSegments.map(s => Math.round(s.position.z * 10) / 10);
                     packet.lightState = trafficLightState;
                     packet.lightTimer = Math.round(trafficLightTimer * 100) / 100;
                 }
@@ -7368,9 +7800,9 @@
             }, 50);
         }
 
-        // ── Assign stable IDs to NPCs when spawned ──
-        let _npcIdCounter = 0;
-        const _clientNpcMeshes = {}; // id → Three.js mesh (client-side only)
+        // ── NPC ID counter and ghost NPC state ──
+        var _npcIdCounter = 0;
+        var _clientNpcMeshes = {};        // id → Three.js mesh (client-side ghost NPCs)
 
         function _ensureNpcId(car) {
             if (!car.userData.npcId) {
@@ -7378,45 +7810,60 @@
             }
         }
 
-        // Called inside update() loop after trafficCars are spawned, host-side only
+        // Called inside update() loop, host-side only — stamps each NPC with a stable ID
         function _tagTrafficIds() {
             trafficCars.forEach(_ensureNpcId);
         }
 
-        // Client: apply NPC list received from host
+        // Client: receive NPC data from host and update/spawn ghost meshes.
+        // hostZ = opponentCar.position.z (where Host is relative to Client)
+        // npc.z = where NPC is relative to Host
+        // Therefore in Client's world: targetZ = hostZ + npc.z
         function _applyHostNpcs(npcs) {
-            if (!Array.isArray(npcs)) return;
+            if (!Array.isArray(npcs) || !opponentCar) return;
 
             const seenIds = new Set();
+            const hostZ = opponentCar.position.z;
 
             npcs.forEach(npc => {
                 if (!npc.id) return;
                 seenIds.add(npc.id);
 
+                const targetZ = hostZ + npc.z;
+
                 if (_clientNpcMeshes[npc.id]) {
-                    // Update existing ghost NPC position
                     const mesh = _clientNpcMeshes[npc.id];
-                    mesh.position.x = THREE.MathUtils.lerp(mesh.position.x, npc.x, 0.35);
-                    mesh.position.z = THREE.MathUtils.lerp(mesh.position.z, npc.z, 0.35);
+                    mesh.userData.cruiseSpeed = npc.s || 0.12;
+
+                    // Smooth reconciliation
+                    const zDrift = targetZ - mesh.position.z;
+                    if (Math.abs(zDrift) > 10) {
+                        mesh.position.z = targetZ;
+                    } else {
+                        mesh.position.z += zDrift * 0.45;
+                    }
+                    mesh.position.x = THREE.MathUtils.lerp(mesh.position.x, npc.x, 0.45);
                 } else {
-                    // Spawn new ghost NPC matching the host type
                     let mesh;
-                    if (npc.t === 'truck') mesh = createTataTruck();
-                    else if (npc.t === 'schoolbus') mesh = createSchoolBus();
-                    else if (npc.t === 'thar') mesh = createMahindraThar();
-                    else if (npc.t === 'bike') mesh = createMotorcycle();
-                    else if (npc.t === 'police') mesh = createPoliceCar();
+                    const t = npc.t;
+                    if (t === 'truck') mesh = createTataTruck();
+                    else if (t === 'schoolbus') mesh = createSchoolBus();
+                    else if (t === 'thar') mesh = createMahindraThar();
+                    else if (t === 'bike') mesh = createMotorcycle();
+                    else if (t === 'police') mesh = createPoliceCar();
                     else mesh = createRealisticCar(0x1e90ff);
 
                     mesh.userData.npcId = npc.id;
                     mesh.userData.isClientGhostNpc = true;
-                    mesh.position.set(npc.x, 0, npc.z);
+                    mesh.userData.npcType = t;
+                    mesh.userData.cruiseSpeed = npc.s || 0.12;
+                    mesh.position.set(npc.x, 0, targetZ);
                     scene.add(mesh);
                     _clientNpcMeshes[npc.id] = mesh;
                 }
             });
 
-            // Remove ghost NPCs that are no longer in host's list
+            // Remove ghost NPCs no longer present on host
             Object.keys(_clientNpcMeshes).forEach(id => {
                 if (!seenIds.has(parseInt(id))) {
                     scene.remove(_clientNpcMeshes[id]);
@@ -7425,13 +7872,25 @@
             });
         }
 
-        // Client: apply road segment Z positions (keeps signals & bridges in sync)
-        function _applyHostSegs(segs) {
-            if (!Array.isArray(segs) || segs.length !== roadSegments.length) return;
-            segs.forEach((z, i) => {
-                roadSegments[i].position.z = THREE.MathUtils.lerp(
-                    roadSegments[i].position.z, z, 0.25
-                );
+        // Called every frame on client: advance ghost NPCs with dead reckoning
+        function _advanceClientNpcs(delta, playerSpeed) {
+            const toRemove = [];
+            const ghostMeshes = Object.values(_clientNpcMeshes);
+            for (let i = 0; i < ghostMeshes.length; i++) {
+                const mesh = ghostMeshes[i];
+                const cruiseSpeed = mesh.userData.cruiseSpeed || 0.12;
+                const frameMove = (playerSpeed - cruiseSpeed) * delta * 90;
+                mesh.position.z += frameMove;
+
+                if (mesh.position.z > 25 || mesh.position.z < -380) {
+                    toRemove.push(mesh.userData.npcId);
+                }
+            }
+            toRemove.forEach(id => {
+                if (_clientNpcMeshes[id]) {
+                    scene.remove(_clientNpcMeshes[id]);
+                    delete _clientNpcMeshes[id];
+                }
             });
         }
 
@@ -7630,6 +8089,12 @@
             oppNetScore = 0;
             oppNetX = 0;
             oppPrevX = 0;
+
+            // Remove all ghost NPC meshes
+            Object.keys(_clientNpcMeshes).forEach(id => {
+                scene.remove(_clientNpcMeshes[id]);
+                delete _clientNpcMeshes[id];
+            });
         }
 
         // ────────── PATCH gameOver / quitToMainMenu ────────────────────────────
